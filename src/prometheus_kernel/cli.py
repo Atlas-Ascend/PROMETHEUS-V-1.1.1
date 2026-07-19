@@ -15,6 +15,7 @@ from .serverforge import (
     empty_snapshot,
     install_url,
     load_topology,
+    run_campaign,
     verify_topology,
 )
 
@@ -45,6 +46,11 @@ def parser() -> argparse.ArgumentParser:
     apply.add_argument("--backup", type=Path)
     live_verify = forge_commands.add_parser("verify", help="verify live Discord topology")
     live_verify.add_argument("topology", type=Path, nargs="?", default=Path("serverforge/topology.json"))
+    campaign = forge_commands.add_parser("campaign", help="run the complete HYDRA ServerForge campaign")
+    campaign.add_argument("topology", type=Path, nargs="?", default=Path("serverforge/topology.json"))
+    campaign.add_argument("--confirm-guild", required=True)
+    campaign.add_argument("--evidence-root", type=Path, default=Path(".prometheus/serverforge/campaigns"))
+    campaign.add_argument("--no-publish", action="store_true")
     return root
 
 
@@ -93,10 +99,24 @@ def main(argv: list[str] | None = None) -> int:
             topology = load_topology(args.topology)
             backup = args.backup or Path(".prometheus/serverforge/backups") / f"{guild_id}-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}.json"
             result = apply_topology(client, guild_id, topology, backup)
-        else:
+        elif args.serverforge_command == "verify":
             client, guild_id = client_from_environment()
             topology = load_topology(args.topology)
             result = verify_topology(topology, client.snapshot(guild_id))
+        else:
+            client, guild_id = client_from_environment()
+            if args.confirm_guild != guild_id:
+                raise ServerForgeError("--confirm-guild must exactly match DISCORD_GUILD_ID")
+            topology_path = args.topology.resolve()
+            topology = load_topology(topology_path)
+            result = run_campaign(
+                client,
+                guild_id,
+                topology,
+                topology_path,
+                args.evidence_root,
+                publish=not args.no_publish,
+            )
         print(json.dumps(result, indent=2, sort_keys=True))
         return 0 if result.get("valid", True) and result.get("status") != "VERIFY_FAILED" else 1
     except ServerForgeError as error:

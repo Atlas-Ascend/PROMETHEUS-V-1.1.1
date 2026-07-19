@@ -26,14 +26,8 @@ try {
     }
 
     if (-not $ConfirmGuild) { $ConfirmGuild = $env:DISCORD_GUILD_ID }
-    python -m prometheus_kernel serverforge preflight
-    if ($LASTEXITCODE -ne 0) { throw "ServerForge preflight failed." }
-
-    python -m prometheus_kernel serverforge apply $Topology --confirm-guild $ConfirmGuild
-    if ($LASTEXITCODE -ne 0) { throw "ServerForge apply failed." }
-
-    python -m prometheus_kernel serverforge verify $Topology
-    if ($LASTEXITCODE -ne 0) { throw "ServerForge verification failed." }
+    python -m prometheus_kernel serverforge campaign $Topology --confirm-guild $ConfirmGuild
+    if ($LASTEXITCODE -ne 0) { throw "HYDRA ServerForge campaign failed." }
 }
 finally {
     Pop-Location

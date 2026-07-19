@@ -12,3 +12,5 @@
 - ServerForge bridge available from startup
 - Discord topology plan, preflight, snapshot, apply, backup, and verify
 - 200-role office map, reference architecture, threat model, schemas, CI, and competition demo
+- HYDRA seven-head live ServerForge campaign with Discord proof publication
+- explicit bot identity overwrites preventing private-category self-lockout
