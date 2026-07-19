@@ -3,9 +3,7 @@ from __future__ import annotations
 import json
 import os
 import time
-import urllib.error
 import urllib.parse
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -22,6 +20,21 @@ class ServerForgeError(RuntimeError):
     pass
 
 
+def _load_http_transport():
+    """Load HTTPS only at the live Discord boundary, not during offline planning/tests."""
+    try:
+        import urllib.error as urlerror
+        import urllib.request as urlrequest
+    except KeyboardInterrupt as error:
+        raise ServerForgeError(
+            "Python HTTPS initialization was interrupted. Rerun the command; if it repeats, "
+            "verify Python SSL with: python -c \"import ssl; print(ssl.OPENSSL_VERSION)\""
+        ) from error
+    except Exception as error:
+        raise ServerForgeError(f"Python HTTPS transport could not initialize: {error}") from error
+    return urlerror, urlrequest
+
+
 class DiscordClient:
     def __init__(self, token: str, api_base: str = API_BASE):
         if not token:
@@ -36,6 +49,7 @@ class DiscordClient:
         payload: dict[str, Any] | list[Any] | None = None,
         reason: str = "PROMETHEUS ServerForge",
     ) -> Any:
+        urlerror, urlrequest = _load_http_transport()
         data = None if payload is None else json.dumps(payload).encode("utf-8")
         headers = {
             "Authorization": f"Bot {self.token}",
@@ -44,12 +58,12 @@ class DiscordClient:
             "X-Audit-Log-Reason": urllib.parse.quote(reason),
         }
         for attempt in range(4):
-            request = urllib.request.Request(self.api_base + path, data=data, headers=headers, method=method)
+            request = urlrequest.Request(self.api_base + path, data=data, headers=headers, method=method)
             try:
-                with urllib.request.urlopen(request, timeout=30) as response:
+                with urlrequest.urlopen(request, timeout=30) as response:
                     body = response.read()
                     return json.loads(body) if body else None
-            except urllib.error.HTTPError as error:
+            except urlerror.HTTPError as error:
                 body = error.read().decode("utf-8", errors="replace")
                 if error.code == 429 and attempt < 3:
                     try:
@@ -59,7 +73,7 @@ class DiscordClient:
                     time.sleep(min(retry_after, 10))
                     continue
                 raise ServerForgeError(f"Discord API {method} {path} failed: HTTP {error.code}: {body}") from error
-            except urllib.error.URLError as error:
+            except urlerror.URLError as error:
                 raise ServerForgeError(f"Discord API connection failed: {error.reason}") from error
         raise ServerForgeError(f"Discord API rate limit did not clear for {method} {path}")
 
