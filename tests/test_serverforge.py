@@ -22,6 +22,7 @@ class FakeDiscordClient:
         self.roles = [{"id": "guild", "name": "@everyone", "managed": False}]
         self.channels = []
         self.messages = 0
+        self.blocked_channel_ids = set()
 
     def preflight(self, guild_id):
         return {
@@ -53,6 +54,11 @@ class FakeDiscordClient:
             return channel
         if method == "PATCH" and path.startswith("/channels/"):
             channel_id = path.rsplit("/", 1)[-1]
+            if channel_id in self.blocked_channel_ids:
+                from prometheus_kernel.serverforge import ServerForgeError
+                raise ServerForgeError(
+                    f'Discord API PATCH {path} failed: HTTP 403: {{"message": "Missing Access", "code": 50001}}'
+                )
             channel = next(item for item in self.channels if item["id"] == channel_id)
             channel.update(payload)
             return channel
@@ -139,6 +145,32 @@ class ServerForgeTests(unittest.TestCase):
             self.assertTrue(all(head["passed"] for head in result["hydra_heads"]))
             self.assertEqual(len(result["publications"]), 3)
             self.assertTrue((Path(result["evidence_root"]) / "campaign-receipt.json").is_file())
+
+    def test_hydra_recovers_an_inaccessible_legacy_category(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            topology = self.topology()
+            topology["categories"][0]["channels"].extend([
+                {"name": "live-case-study", "type": "text"},
+                {"name": "bridge-control", "type": "text"},
+                {"name": "promotion-receipts", "type": "text"},
+            ])
+            topology_path = root / "topology.json"
+            topology_path.write_text(json.dumps(topology))
+            client = FakeDiscordClient()
+            client.channels.append({
+                "id": "locked-category",
+                "name": "CONTROL",
+                "type": 4,
+                "parent_id": None,
+                "permission_overwrites": [],
+            })
+            client.blocked_channel_ids.add("locked-category")
+            result = run_campaign(client, "guild", topology, topology_path, root / "evidence")
+            self.assertEqual(result["status"], "LIVE_VERIFIED")
+            receipt = json.loads((Path(result["evidence_root"]) / "campaign-receipt.json").read_text())
+            self.assertEqual(receipt["recoveries"][0]["orphan_id"], "locked-category")
+            self.assertNotEqual(receipt["recoveries"][0]["replacement_id"], "locked-category")
 
 
 if __name__ == "__main__":

@@ -21,3 +21,5 @@ python -m prometheus_kernel serverforge campaign `
 ```
 
 Evidence is written under `.prometheus/serverforge/campaigns/<campaign-id>/`. The bot is explicitly allowed in every managed category overwrite so it cannot lock itself out of private control surfaces.
+
+If a partial run created a private category before bot-identity overwrites existed, HYDRA treats it as an ACL orphan. The campaign preserves the inaccessible object ID in its receipt, creates an accessible replacement, selects the category instance containing the complete expected topology, and continues without discarding the recovery evidence.

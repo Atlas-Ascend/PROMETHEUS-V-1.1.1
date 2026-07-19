@@ -142,6 +142,30 @@ def empty_snapshot(guild_name: str = "UNPROVISIONED") -> dict[str, Any]:
     }
 
 
+def _best_category(
+    channels: list[dict[str, Any]],
+    category_name: str,
+    expected_children: set[str],
+) -> dict[str, Any] | None:
+    options = [channel for channel in channels if channel.get("type") == 4 and channel.get("name") == category_name]
+    if not options:
+        return None
+    child_names_by_parent: dict[str, set[str]] = {}
+    for channel in channels:
+        parent_id = channel.get("parent_id")
+        if parent_id:
+            child_names_by_parent.setdefault(parent_id, set()).add(channel["name"])
+    return max(
+        options,
+        key=lambda category: len(child_names_by_parent.get(category["id"], set()) & expected_children),
+    )
+
+
+def _is_access_error(error: ServerForgeError) -> bool:
+    message = str(error)
+    return "code\": 50001" in message or "code\": 50013" in message
+
+
 def build_plan(topology: dict[str, Any], snapshot: dict[str, Any]) -> list[dict[str, Any]]:
     actions: list[dict[str, Any]] = []
     if snapshot.get("guild", {}).get("name") != topology["guild"]["name"]:
@@ -151,11 +175,12 @@ def build_plan(topology: dict[str, Any], snapshot: dict[str, Any]) -> list[dict[
         if role["name"] not in role_names:
             actions.append({"action": "create_role", "name": role["name"]})
     channels = snapshot.get("channels", [])
-    categories = {channel["name"]: channel for channel in channels if channel.get("type") == 4}
     for category in topology["categories"]:
-        if category["name"] not in categories:
+        expected_children = {channel["name"] for channel in category.get("channels", [])}
+        parent = _best_category(channels, category["name"], expected_children)
+        if parent is None:
             actions.append({"action": "create_category", "name": category["name"]})
-        parent_id = categories.get(category["name"], {}).get("id")
+        parent_id = parent.get("id") if parent else None
         existing_children = set() if parent_id is None else {
             channel["name"] for channel in channels
             if channel.get("type") != 4 and channel.get("parent_id") == parent_id
@@ -205,6 +230,7 @@ def apply_topology(
     backup_path: Path,
 ) -> dict[str, Any]:
     bot = client.request("GET", "/users/@me")
+    recoveries: list[dict[str, str]] = []
     before = client.snapshot(guild_id)
     backup_path.parent.mkdir(parents=True, exist_ok=True)
     backup_path.write_text(json.dumps(before, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -233,10 +259,10 @@ def apply_topology(
     role_ids = {name: role["id"] for name, role in role_by_name.items()}
 
     state = client.snapshot(guild_id)
-    category_by_name = {channel["name"]: channel for channel in state["channels"] if channel["type"] == 4}
     for category in topology["categories"]:
         overwrites = _overwrites(guild_id, category, role_ids, bot["id"])
-        parent = category_by_name.get(category["name"])
+        expected_children = {channel["name"] for channel in category.get("channels", [])}
+        parent = _best_category(state["channels"], category["name"], expected_children)
         if parent is None:
             parent = client.request(
                 "POST",
@@ -244,14 +270,32 @@ def apply_topology(
                 {"name": category["name"], "type": 4, "permission_overwrites": overwrites},
                 f"ServerForge: create category {category['name']}",
             )
-            category_by_name[category["name"]] = parent
         else:
-            parent = client.request(
-                "PATCH",
-                f"/channels/{parent['id']}",
-                {"permission_overwrites": overwrites},
-                f"ServerForge: reconcile category {category['name']}",
-            )
+            try:
+                parent = client.request(
+                    "PATCH",
+                    f"/channels/{parent['id']}",
+                    {"permission_overwrites": overwrites},
+                    f"ServerForge: reconcile category {category['name']}",
+                )
+            except ServerForgeError as error:
+                if not _is_access_error(error):
+                    raise
+                orphan_id = parent["id"]
+                parent = client.request(
+                    "POST",
+                    f"/guilds/{guild_id}/channels",
+                    {"name": category["name"], "type": 4, "permission_overwrites": overwrites},
+                    f"ServerForge: recover inaccessible category {category['name']}",
+                )
+                recoveries.append(
+                    {
+                        "type": "acl-orphan-category",
+                        "name": category["name"],
+                        "orphan_id": orphan_id,
+                        "replacement_id": parent["id"],
+                    }
+                )
         existing = client.snapshot(guild_id)["channels"]
         children = {
             channel["name"]: channel
@@ -272,12 +316,30 @@ def apply_topology(
                 payload["topic"] = channel["topic"]
             existing_channel = children.get(channel["name"])
             if existing_channel:
-                client.request(
-                    "PATCH",
-                    f"/channels/{existing_channel['id']}",
-                    payload,
-                    f"ServerForge: reconcile channel {category['name']}/{channel['name']}",
-                )
+                try:
+                    client.request(
+                        "PATCH",
+                        f"/channels/{existing_channel['id']}",
+                        payload,
+                        f"ServerForge: reconcile channel {category['name']}/{channel['name']}",
+                    )
+                except ServerForgeError as error:
+                    if not _is_access_error(error):
+                        raise
+                    replacement = client.request(
+                        "POST",
+                        f"/guilds/{guild_id}/channels",
+                        payload,
+                        f"ServerForge: recover inaccessible channel {category['name']}/{channel['name']}",
+                    )
+                    recoveries.append(
+                        {
+                            "type": "acl-orphan-channel",
+                            "name": f"{category['name']}/{channel['name']}",
+                            "orphan_id": existing_channel["id"],
+                            "replacement_id": replacement["id"],
+                        }
+                    )
             else:
                 client.request(
                     "POST",
@@ -293,6 +355,7 @@ def apply_topology(
         "guild_id": guild_id,
         "backup": str(backup_path),
         "verification": verification,
+        "recoveries": recoveries,
         "after": after,
     }
 
@@ -359,6 +422,7 @@ def run_campaign(
     _write_json(root / "apply-plan.json", plan)
 
     application = apply_topology(client, guild_id, topology, root / "before-state-apply-backup.json")
+    _write_json(root / "application.json", {key: value for key, value in application.items() if key != "after"})
     after = application["after"]
     _write_json(root / "after-state.json", after)
     verification = verify_topology(topology, after)
@@ -386,6 +450,7 @@ def run_campaign(
         "bot": preflight["bot"],
         "hydra_heads": hydra_heads,
         "verification": verification,
+        "recoveries": application["recoveries"],
         "residual_actions": residual_plan,
         "evidence": {
             "topology_sha256": sha256_file(topology_path),
@@ -393,6 +458,7 @@ def run_campaign(
             "after_state_sha256": sha256_file(root / "after-state.json"),
             "apply_plan_sha256": sha256_file(root / "apply-plan.json"),
             "recovery_backup_sha256": sha256_file(root / "before-state-apply-backup.json"),
+            "application_sha256": sha256_file(root / "application.json"),
         },
     }
     receipt_hash = sha256_text(canonical_json(payload))
@@ -418,11 +484,11 @@ def verify_topology(topology: dict[str, Any], snapshot: dict[str, Any]) -> dict[
     role_names = {role["name"] for role in snapshot.get("roles", [])}
     missing_roles = sorted(role["name"] for role in topology["roles"] if role["name"] not in role_names)
     channels = snapshot.get("channels", [])
-    categories = {channel["name"]: channel for channel in channels if channel.get("type") == 4}
     missing_categories: list[str] = []
     missing_channels: list[str] = []
     for category in topology["categories"]:
-        parent = categories.get(category["name"])
+        expected_children = {channel["name"] for channel in category.get("channels", [])}
+        parent = _best_category(channels, category["name"], expected_children)
         if parent is None:
             missing_categories.append(category["name"])
             missing_channels.extend(f"{category['name']}/{channel['name']}" for channel in category.get("channels", []))
