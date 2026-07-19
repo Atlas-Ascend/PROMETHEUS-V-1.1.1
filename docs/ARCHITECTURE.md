@@ -34,4 +34,4 @@ Mission commands execute with the permissions of the invoking user. The P0 workt
 
 ## Adapter direction
 
-Later phases add candidate generators, sandbox backends, EDEN/Cali execution, Thoth memory, ProofGrid publication, and Discord/ServerForge operations behind stable interfaces. P0 keeps those claims outside the executable baseline.
+Later phases add model-backed candidate generators, stronger sandbox backends, EDEN/Cali execution, Thoth memory, ProofGrid publication, and ServerForge Gateway observability behind stable interfaces. The ServerForge HTTP bridge for plan, preflight, snapshot, apply, and verify is already inside the executable P0 baseline.

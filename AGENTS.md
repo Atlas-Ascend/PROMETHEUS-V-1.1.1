@@ -4,4 +4,4 @@ Preserve the mission-to-proof loop. Every implementation change must identify it
 
 Do not claim external execution without captured evidence. Never commit secrets, Discord tokens, private messages, member PII, or local environment files. Prefer patches to replacement builds. Keep deterministic local execution available without external services.
 
-P0 is the active baseline. P1 is the ServerForge deployment to an explicitly authorized Discord server.
+P0 is the active baseline and includes the direct ServerForge bridge. P1 is the first live, evidence-captured deployment to an explicitly authorized new Discord server.

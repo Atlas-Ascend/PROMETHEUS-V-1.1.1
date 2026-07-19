@@ -33,4 +33,4 @@ PROMETHEUS turns a software mission into one promoted, evidence-backed result wh
 
 ## P1 requirements
 
-P1 will add a Discord adapter and deployment plan for one explicitly authorized server. It must inventory the before state, produce three topology candidates, validate permissions, apply one promoted topology, prove a real end-to-end command path, and retain a secrets-redacted rollback package.
+P1 will execute the existing ServerForge bridge against one explicitly authorized new server. It must inventory the before state, evaluate topology candidates, validate permissions, apply one promoted topology, prove a real end-to-end command path, and retain a secrets-redacted recovery package.
