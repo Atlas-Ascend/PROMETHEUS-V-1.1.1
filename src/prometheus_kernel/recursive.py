@@ -69,8 +69,6 @@ def _changed_files(workspace: Path) -> list[str]:
 
 
 def _commit(workspace: Path, message: str) -> str:
-    _git(workspace, "config", "user.name", "PROMETHEUS Recursive Forge")
-    _git(workspace, "config", "user.email", "prometheus@local.invalid")
     _git(workspace, "add", "-A")
     _git(workspace, "commit", "-m", message)
     return _git(workspace, "rev-parse", "HEAD").stdout.strip()
@@ -283,6 +281,10 @@ def run_recursive_campaign(
 
     base_ref = mission.get("base_ref", "HEAD")
     base_commit = _git(source_repo, "rev-parse", base_ref).stdout.strip()
+    # Git worktrees share repository configuration. Set identity once before
+    # concurrent lanes begin so candidate commits never race on .git/config.
+    _git(source_repo, "config", "user.name", "PROMETHEUS Recursive Forge")
+    _git(source_repo, "config", "user.email", "prometheus@local.invalid")
     worktree_root = root / "worktrees"
     worktree_root.mkdir(parents=True)
     for candidate in mission["candidates"]:

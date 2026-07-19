@@ -26,6 +26,7 @@ Given a clean authorized Git worktree, an authenticated Codex CLI, and the froze
 1. Resolve and freeze the exact source commit.
 2. Create at least three independent candidate branches and Git worktrees.
 3. invoke `codex exec` concurrently in the worktrees using explicit `workspace-write`, ephemeral sessions, and JSONL evidence.
+   Shared Git identity is configured once before fan-out so concurrent lanes do not contend on repository configuration.
 4. Strip Discord, GitHub, and API-key credentials from every Codex candidate environment; Codex uses the authenticated local CLI session.
 5. Require each candidate to leave a real repository patch.
 6. Commit and test every candidate independently.
