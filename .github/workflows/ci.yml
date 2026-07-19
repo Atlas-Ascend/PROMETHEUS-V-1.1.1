@@ -1,0 +1,39 @@
+name: PROMETHEUS Proof Gates
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-ignite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Configure Git identity
+        run: |
+          git config --global user.name "PROMETHEUS CI"
+          git config --global user.email "prometheus-ci@users.noreply.github.com"
+      - name: Install
+        run: python -m pip install -e .
+      - name: Test kernel
+        run: python -m unittest discover -s tests -v
+      - name: Execute P0 mission
+        run: prometheus run missions/bootstrap.json
+      - name: Verify latest receipt
+        shell: bash
+        run: |
+          receipt=$(find .prometheus/runs -name promotion-receipt.json -type f | sort | tail -n 1)
+          prometheus verify "$receipt"
+      - name: Preserve P0 proof bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: prometheus-p0-proof-${{ github.sha }}
+          path: .prometheus/runs/
+          if-no-files-found: error

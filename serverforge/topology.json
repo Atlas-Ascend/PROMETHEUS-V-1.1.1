@@ -1,0 +1,73 @@
+{
+  "schema": "serverforge.topology.v1",
+  "guild": {
+    "name": "PROMETHEUS Forge — Live Case Study",
+    "verification_level": 2,
+    "default_message_notifications": 1,
+    "explicit_content_filter": 2
+  },
+  "roles": [
+    {"name": "PROMETHEUS Operator", "permissions": "0", "color": 15105570, "hoist": true, "mentionable": false},
+    {"name": "Forge Builder", "permissions": "0", "color": 15844367, "hoist": true, "mentionable": false},
+    {"name": "Adversarial Twin", "permissions": "0", "color": 10038562, "hoist": true, "mentionable": false},
+    {"name": "Proof Auditor", "permissions": "0", "color": 3447003, "hoist": true, "mentionable": false},
+    {"name": "Case Study Observer", "permissions": "0", "color": 9807270, "hoist": false, "mentionable": false}
+  ],
+  "categories": [
+    {
+      "name": "00 — START HERE",
+      "access": "public",
+      "read_roles": ["Case Study Observer"],
+      "write_roles": ["PROMETHEUS Operator"],
+      "channels": [
+        {"name": "welcome-to-the-forge", "type": "text", "topic": "What PROMETHEUS is, what this server proves, and how to read the evidence."},
+        {"name": "live-case-study", "type": "text", "topic": "Competition-facing narrative and live proof checkpoints."},
+        {"name": "proof-index", "type": "text", "topic": "Receipts, hashes, capability genomes, and reproduction instructions."}
+      ]
+    },
+    {
+      "name": "01 — MISSION CONTROL",
+      "access": "private",
+      "read_roles": ["PROMETHEUS Operator", "Forge Builder", "Adversarial Twin", "Proof Auditor"],
+      "write_roles": ["PROMETHEUS Operator", "Forge Builder"],
+      "channels": [
+        {"name": "mission-intake", "type": "text", "topic": "Authorized mission declarations and acceptance criteria."},
+        {"name": "candidate-forge", "type": "text", "topic": "Candidate A/B/C status and isolated execution telemetry."},
+        {"name": "promotion-gate", "type": "text", "topic": "Arbitration state and the single promoted result."}
+      ]
+    },
+    {
+      "name": "02 — ADVERSARIAL TWIN",
+      "access": "private",
+      "read_roles": ["PROMETHEUS Operator", "Forge Builder", "Adversarial Twin", "Proof Auditor"],
+      "write_roles": ["PROMETHEUS Operator", "Adversarial Twin", "Proof Auditor"],
+      "channels": [
+        {"name": "challenge-queue", "type": "text", "topic": "Threat hypotheses, boundary cases, and challenge execution."},
+        {"name": "findings", "type": "text", "topic": "Adversarial findings with evidence and disposition."},
+        {"name": "repair-verification", "type": "text", "topic": "Repair commits and post-repair test evidence."}
+      ]
+    },
+    {
+      "name": "03 — PROOFGRID",
+      "access": "public",
+      "read_roles": ["Case Study Observer"],
+      "write_roles": ["PROMETHEUS Operator", "Proof Auditor"],
+      "channels": [
+        {"name": "promotion-receipts", "type": "text", "topic": "Hash-verifiable promotion receipts."},
+        {"name": "capability-genomes", "type": "text", "topic": "Capabilities demonstrated by executable evidence."},
+        {"name": "reproduction-lab", "type": "text", "topic": "Clean-environment reproduction results."}
+      ]
+    },
+    {
+      "name": "04 — SERVERFORGE OPS",
+      "access": "private",
+      "read_roles": ["PROMETHEUS Operator", "Forge Builder", "Adversarial Twin", "Proof Auditor"],
+      "write_roles": ["PROMETHEUS Operator", "Forge Builder", "Proof Auditor"],
+      "channels": [
+        {"name": "bridge-control", "type": "text", "topic": "ServerForge preflight, plan, apply, verify, and recovery receipts."},
+        {"name": "telemetry", "type": "text", "topic": "Health, rate-limit, command, and runtime observations."},
+        {"name": "incidents-and-rollback", "type": "text", "topic": "Incident records, backup manifests, and rollback evidence."}
+      ]
+    }
+  ]
+}

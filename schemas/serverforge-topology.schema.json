@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prometheus.local/schemas/serverforge-topology.schema.json",
+  "title": "ServerForge Discord Topology",
+  "type": "object",
+  "required": ["schema", "guild", "roles", "categories"],
+  "properties": {
+    "schema": {"const": "serverforge.topology.v1"},
+    "guild": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string", "minLength": 2, "maxLength": 100},
+        "verification_level": {"type": "integer", "minimum": 0, "maximum": 4},
+        "default_message_notifications": {"type": "integer", "minimum": 0, "maximum": 1},
+        "explicit_content_filter": {"type": "integer", "minimum": 0, "maximum": 2}
+      },
+      "additionalProperties": false
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1, "maxLength": 100},
+          "permissions": {"type": "string", "pattern": "^[0-9]+$"},
+          "color": {"type": "integer", "minimum": 0, "maximum": 16777215},
+          "hoist": {"type": "boolean"},
+          "mentionable": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "access", "channels"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1, "maxLength": 100},
+          "access": {"enum": ["public", "private"]},
+          "read_roles": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "write_roles": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "type"],
+              "properties": {
+                "name": {"type": "string", "minLength": 1, "maxLength": 100},
+                "type": {"enum": ["text", "voice", "forum"]},
+                "topic": {"type": "string", "maxLength": 1024}
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

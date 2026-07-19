@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prometheus-ignition-kernel"
+version = "1.1.1"
+description = "Candidate-to-proof recursive software engineering ignition kernel"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "Apache-2.0"}
+authors = [{name = "Atlas Ascend"}]
+dependencies = []
+
+[project.scripts]
+prometheus = "prometheus_kernel.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

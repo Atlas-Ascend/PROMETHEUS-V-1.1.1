@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prometheus.local/schemas/receipt.schema.json",
+  "title": "PROMETHEUS Promotion Receipt",
+  "type": "object",
+  "required": [
+    "schema", "run_id", "mission_id", "mission_sha256", "candidate_results",
+    "leader", "promoted_commit", "artifacts", "event_ledger", "receipt_hash"
+  ],
+  "properties": {
+    "schema": {"const": "prometheus.receipt.v1"},
+    "run_id": {"type": "string"},
+    "mission_id": {"type": "string"},
+    "mission_sha256": {"$ref": "#/$defs/sha256"},
+    "candidate_results": {"type": "array", "minItems": 3},
+    "leader": {"type": "string"},
+    "promoted_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "artifacts": {"type": "array"},
+    "event_ledger": {
+      "type": "object",
+      "required": ["path", "events", "chain_head", "sha256"],
+      "properties": {
+        "path": {"type": "string"},
+        "events": {"type": "integer", "minimum": 1},
+        "chain_head": {"$ref": "#/$defs/sha256"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "receipt_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
