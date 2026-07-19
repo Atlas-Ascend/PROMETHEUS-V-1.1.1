@@ -1,0 +1,80 @@
+{
+  "schema": "prometheus.recursive-mission.v1",
+  "mission_id": "P1-RECURSIVE-FORGE-001",
+  "objective": "Harden PROMETHEUS V-1.1.1 into an installable Codex-backed recursive software forge while preserving the verified P0 and ServerForge baselines.",
+  "source_repo": ".",
+  "base_ref": "HEAD",
+  "acceptance_criteria": [
+    "Preserve the deterministic P0 mission-to-proof loop and its receipt verification.",
+    "Preserve the live-verified idempotent ServerForge topology and ACL-orphan recovery path.",
+    "Keep Codex candidate generation isolated in independent Git worktrees.",
+    "Run at least three materially different candidate strategies concurrently.",
+    "Require standard and adversarial gates before promotion.",
+    "Commit a portable recursive proof bundle without credentials or private Discord content.",
+    "Support Windows PowerShell installation and full-campaign execution from C:\\Ghost\\PROMETHEUS-V-1.1.1.",
+    "Keep the Python runtime dependency-free beyond the standard library.",
+    "All repository unit tests pass on Python 3.11 or newer."
+  ],
+  "constraints": [
+    "Patch the existing architecture; do not replace P0, ServerForge, ProofGrid receipts, or the event ledger.",
+    "Never commit tokens, environment files, member data, or private Discord messages.",
+    "Do not push, merge, or open pull requests from a candidate lane.",
+    "Do not weaken executable allowlists, path containment, exact repository confirmation, or exact guild confirmation.",
+    "Prefer focused changes with executable tests and truthful documentation."
+  ],
+  "standard_test": [
+    "python",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-v"
+  ],
+  "challenge_test": [
+    "python",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "policy": {
+    "allowed_executables": [
+      "python"
+    ],
+    "command_timeout_seconds": 1200,
+    "max_output_chars": 200000,
+    "max_changed_files": 120,
+    "parallel_candidates": 3
+  },
+  "codex": {
+    "timeout_seconds": 3600
+  },
+  "candidates": [
+    {
+      "id": "reliability-spine",
+      "strategy": "Prioritize durable execution, resumability, deterministic state transitions, and failure recovery.",
+      "prompt": "Audit the recursive forge as a reliability engineer. Implement the smallest coherent set of improvements that makes interrupted candidate generation, testing, proof emission, Git promotion, and ServerForge publication observable and safely resumable. Preserve strong error evidence and add regression coverage."
+    },
+    {
+      "id": "security-boundary",
+      "strategy": "Prioritize sandbox boundaries, secret isolation, command policy, repository confirmation, and proof integrity.",
+      "prompt": "Audit the recursive forge as an adversarial security engineer. Harden process environments, worktree/path containment, Git target confirmation, evidence redaction, receipt verification, and external publication boundaries. Prove the controls with focused tests without adding heavy dependencies."
+    },
+    {
+      "id": "operator-velocity",
+      "strategy": "Prioritize one-command Windows operation, clear telemetry, installation quality, and judge-facing proof.",
+      "prompt": "Audit the recursive forge as a product and developer-experience engineer. Improve the PowerShell install/run path, actionable errors, campaign summary, documentation, and live ServerForge observability while retaining every safety and proof gate. Add tests for any Python behavior you change."
+    }
+  ],
+  "promotion": {
+    "repository": "Atlas-Ascend/PROMETHEUS-V-1.1.1",
+    "base_branch": "main",
+    "branch_prefix": "prometheus/recursive",
+    "pr_title": "PROMETHEUS P1 Recursive Forge promotion"
+  }
+}

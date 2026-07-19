@@ -4,4 +4,4 @@ Preserve the mission-to-proof loop. Every implementation change must identify it
 
 Do not claim external execution without captured evidence. Never commit secrets, Discord tokens, private messages, member PII, or local environment files. Prefer patches to replacement builds. Keep deterministic local execution available without external services.
 
-P0 is the active baseline and includes the direct ServerForge bridge. P1 is the first live, evidence-captured deployment to an explicitly authorized new Discord server.
+P0 remains the deterministic baseline. The HYDRA ServerForge bridge is live and receipt-backed. P1 Recursive Forge adds Codex-backed self-build worktrees, but no recursive run is live until its committed receipt verifies. Candidate agents never push; only the promotion lane may push after exact repository confirmation.

@@ -27,3 +27,16 @@ PROMETHEUS does not merely generate an answer. It creates competing implementati
 ## Demo failure plan
 
 The local P0 proof requires no network. If Discord is unavailable, show the previously captured live snapshot, apply receipt, and GitHub Actions artifact, then run the offline topology plan. Never substitute a fabricated live claim.
+
+## Recursive finale
+
+After the deterministic seven-minute proof, show the full recursive run as the category-defining extension:
+
+1. Freeze `missions/self-build.json` against the PROMETHEUS repository.
+2. Display three Codex worktrees generating simultaneously.
+3. Watch matching candidate lifecycle events appear in ServerForge.
+4. Show passing-only leader selection and the independent adversarial repair.
+5. Verify the committed recursive receipt.
+6. Open the promoted draft PR and install the generated wheel.
+
+This proves that the demo mechanism is not confined to the calculator fixture: the same candidate-to-proof law can act on the system that implements it.

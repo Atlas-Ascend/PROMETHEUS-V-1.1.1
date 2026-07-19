@@ -23,6 +23,11 @@
 | Discord privilege escalation | minimum bridge permission request; created roles have zero guild permissions | permission simulation with test identities |
 | Destructive reconciliation | create-missing behavior; no delete path | confirmed exact-state plan and reversible trash model |
 | API rate limits | bounded retry using Discord `retry_after` | distributed rate-limit coordinator |
+| Model child-process secret access | Discord, GitHub, and API-key credentials removed; authenticated CLI session used | dedicated OS identity and secret broker |
+| Candidate Git publication | candidate prompts prohibit push; engine owns promotion | signed protected-branch policy |
+| Wrong GitHub repository | exact `--confirm-repo` comparison before push | out-of-band repository-owner attestation |
+| Concurrent candidate interference | independent branches/worktrees; shared base commit | container or microVM isolation per lane |
+| Fabricated model execution | Codex JSONL/final-message hashes bound into receipt | signed provider attestations |
 
 ## Non-negotiable evidence boundary
 
