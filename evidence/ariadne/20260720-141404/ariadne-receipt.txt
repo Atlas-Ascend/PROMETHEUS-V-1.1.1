@@ -1,0 +1,7 @@
+Trial: ARIADNE OMEGA CLEAN-ROOM REPRODUCIBILITY
+Branch: demo/command-to-proof-omega
+Codex: codex-cli 0.144.6
+Clean clone: /home/eden/Ghost/ARIADNE-20260720-141404
+Judge demo exit code: 0
+Required artifacts: VERIFIED
+State: PROVEN

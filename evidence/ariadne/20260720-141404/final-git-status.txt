@@ -1,0 +1,3 @@
+ M .gitignore
+?? competition/demo/
+?? evidence/ariadne/

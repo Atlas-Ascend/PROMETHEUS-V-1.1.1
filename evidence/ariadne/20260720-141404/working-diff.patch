@@ -1,0 +1,12 @@
+diff --git a/.gitignore b/.gitignore
+index b3ad018..c01851c 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -7,6 +7,7 @@ __pycache__/
+ dist/
+ build/
+ .prometheus/
++competition/demo/evidence/
+ .env
+ .env.*
+ !.env.example

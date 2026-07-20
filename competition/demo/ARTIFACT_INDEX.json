@@ -1,0 +1,17 @@
+{
+  "schema": "prometheus.omega.demo-artifact-contract.v1",
+  "generated_root": "competition/demo/evidence/<OMEGA-run-id>/",
+  "generated_index": "competition/demo/evidence/<OMEGA-run-id>/ARTIFACT_INDEX.json",
+  "required_generated_artifacts": [
+    "OMEGA_RESULT.json",
+    "judge-transcript.log",
+    "kernel-regression.log",
+    "campaign/<mission-run-id>/promotion-receipt.json",
+    "campaign/<mission-run-id>/capability-genome.json",
+    "campaign/<mission-run-id>/build-truth.json",
+    "campaign/<mission-run-id>/events.jsonl",
+    "tamper-evidence-copy/",
+    "tamper-receipt-copy/"
+  ],
+  "note": "The generated index records exact paths, byte sizes, and SHA-256 hashes for each run."
+}

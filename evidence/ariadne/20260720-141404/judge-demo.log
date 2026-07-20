@@ -1,0 +1,17 @@
+[PASS] repository-root: /home/eden/Ghost/ARIADNE-20260720-141404 | evidence=pyproject.toml
+[PASS] runtime: Python 3.12.3 (requires >=3.11) | evidence=competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8/judge-transcript.log
+[PASS] dependency-git: git version 2.43.0 | evidence=competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8/judge-transcript.log
+[PASS] kernel-regression: exit=0; duration=0.360s | evidence=competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8/kernel-regression.log
+[PASS] distinct-candidates: candidates=3; distinct_commits=3; distinct_strategies=3 | evidence=competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8/campaign/P0-BOOTSTRAP-001-20260720T211721Z/promotion-receipt.json
+[PASS] real-execution: standard executions=3 | evidence=competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8/campaign/P0-BOOTSTRAP-001-20260720T211721Z/promotion-receipt.json
+[PASS] adversarial-challenge: leader=minimal-boundary; initial_exit=1 | evidence=competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8/campaign/P0-BOOTSTRAP-001-20260720T211721Z/promotion-receipt.json
+[PASS] repair-and-retest: repair_commit=2a8a9f14023ca573ebdd6f2fbfc744bac40def4b; final_standard=0; final_challenge=0 | evidence=competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8/campaign/P0-BOOTSTRAP-001-20260720T211721Z/promotion-receipt.json
+[PASS] proofgrid-receipt: receipt_hash=0c037a9d88d27a52dc5a63c92d7d44625345d684cdafc58989a63e138f708130 | evidence=competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8/campaign/P0-BOOTSTRAP-001-20260720T211721Z/promotion-receipt.json
+[PASS] evidence-tamper-rejected: verification returned false after evidence mutation | evidence=competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8/tamper-evidence-copy/evidence/minimal-boundary/standard-initial/execution.json
+[PASS] receipt-tamper-rejected: verification returned false after receipt mutation | evidence=competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8/tamper-receipt-copy/promotion-receipt.json
+[PASS] capability-genome: candidate=minimal-boundary; receipt linked | evidence=competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8/campaign/P0-BOOTSTRAP-001-20260720T211721Z/capability-genome.json
+[PASS] build-truth: state=PROVEN; external live deployment not claimed | evidence=competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8/campaign/P0-BOOTSTRAP-001-20260720T211721Z/build-truth.json
+
+PROMETHEUS OMEGA PROVEN
+Evidence: competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8
+Receipt: competition/demo/evidence/OMEGA-20260720T211721Z-c385bdc8/campaign/P0-BOOTSTRAP-001-20260720T211721Z/promotion-receipt.json
