@@ -1,0 +1,72 @@
+{
+  "mission_id": "P0-BOOTSTRAP-001",
+  "objective": "Repair numeric sign classification while preserving a strict, explicit input contract.",
+  "seed_path": "examples/bootstrap_target",
+  "standard_test": ["python", "-m", "unittest", "discover", "-s", "tests", "-v"],
+  "challenge_test": ["python", "-m", "unittest", "discover", "-s", "adversarial_tests", "-v"],
+  "policy": {
+    "allowed_executables": ["python"],
+    "command_timeout_seconds": 30,
+    "max_operations_per_candidate": 20,
+    "max_output_chars": 50000
+  },
+  "candidates": [
+    {
+      "id": "minimal-boundary",
+      "strategy": "Apply the smallest possible zero-boundary correction.",
+      "operations": [
+        {
+          "type": "write",
+          "path": "calculator.py",
+          "content": "def classify(value):\n    \"\"\"Classify a number by sign.\"\"\"\n    if value > 0:\n        return \"positive\"\n    if value < 0:\n        return \"negative\"\n    return \"zero\"\n"
+        }
+      ],
+      "repair_operations": [
+        {
+          "type": "write",
+          "path": "calculator.py",
+          "content": "import math\n\n\ndef classify(value):\n    \"\"\"Classify a finite int or float by sign.\"\"\"\n    if isinstance(value, bool) or not isinstance(value, (int, float)):\n        raise TypeError(\"value must be an int or float, excluding bool\")\n    if isinstance(value, float) and math.isnan(value):\n        raise ValueError(\"NaN has no sign\")\n    if value > 0:\n        return \"positive\"\n    if value < 0:\n        return \"negative\"\n    return \"zero\"\n"
+        }
+      ]
+    },
+    {
+      "id": "strict-contract",
+      "strategy": "Define and implement a strict numeric contract before classification.",
+      "operations": [
+        {
+          "type": "write",
+          "path": "calculator.py",
+          "content": "import math\n\n\ndef classify(value):\n    \"\"\"Classify a finite int or float by sign.\"\"\"\n    if isinstance(value, bool) or not isinstance(value, (int, float)):\n        raise TypeError(\"value must be an int or float, excluding bool\")\n    if isinstance(value, float) and math.isnan(value):\n        raise ValueError(\"NaN has no sign\")\n    if value > 0:\n        return \"positive\"\n    if value < 0:\n        return \"negative\"\n    return \"zero\"\n"
+        },
+        {
+          "type": "write",
+          "path": "CONTRACT.md",
+          "content": "# Numeric Contract\n\nAccepted: finite integers and floats. Rejected: booleans, strings, objects, and NaN.\n"
+        }
+      ],
+      "repair_operations": []
+    },
+    {
+      "id": "normalized-result",
+      "strategy": "Separate validation, comparison, and result vocabulary into explicit components.",
+      "operations": [
+        {
+          "type": "write",
+          "path": "calculator.py",
+          "content": "import math\nfrom enum import Enum\n\n\nclass Sign(str, Enum):\n    POSITIVE = \"positive\"\n    NEGATIVE = \"negative\"\n    ZERO = \"zero\"\n\n\ndef _validate(value):\n    if isinstance(value, bool) or not isinstance(value, (int, float)):\n        raise TypeError(\"unsupported numeric input\")\n    if isinstance(value, float) and math.isnan(value):\n        raise ValueError(\"NaN has no sign\")\n\n\ndef classify(value):\n    _validate(value)\n    if value > 0:\n        return Sign.POSITIVE.value\n    if value < 0:\n        return Sign.NEGATIVE.value\n    return Sign.ZERO.value\n"
+        },
+        {
+          "type": "write",
+          "path": "CONTRACT.md",
+          "content": "# Classification Contract\n\nValidation and classification are separate. Results use the Sign vocabulary.\n"
+        },
+        {
+          "type": "write",
+          "path": "DESIGN.md",
+          "content": "# Design\n\nThe normalized-result candidate favors extensibility and explicit result semantics.\n"
+        }
+      ],
+      "repair_operations": []
+    }
+  ]
+}

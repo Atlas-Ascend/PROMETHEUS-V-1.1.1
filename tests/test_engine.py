@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -47,8 +48,22 @@ class EngineTests(unittest.TestCase):
             }
             mission_path = project / "missions" / "test.json"
             mission_path.write_text(json.dumps(mission))
-            summary = execute_mission(mission_path, project / "runs")
+            previous_cwd = Path.cwd()
+            try:
+                os.chdir(project)
+                summary = execute_mission(mission_path, Path("runs"))
+            finally:
+                os.chdir(previous_cwd)
             receipt = Path(summary["receipt"])
+            self.assertTrue(verify_receipt(receipt))
+            receipt_data = json.loads(receipt.read_text())
+            self.assertEqual(len(receipt_data["packets"]), 6)
+            self.assertEqual(len(receipt_data["execution_evidence"]), 4)
+            evidence_path = receipt.parent / receipt_data["execution_evidence"][0]["path"]
+            evidence_original = evidence_path.read_text()
+            evidence_path.write_text(evidence_original + "tampered")
+            self.assertFalse(verify_receipt(receipt))
+            evidence_path.write_text(evidence_original)
             self.assertTrue(verify_receipt(receipt))
             promoted_value = Path(summary["promoted_workspace"]) / "value.txt"
             promoted_value.write_text("tampered artifact")

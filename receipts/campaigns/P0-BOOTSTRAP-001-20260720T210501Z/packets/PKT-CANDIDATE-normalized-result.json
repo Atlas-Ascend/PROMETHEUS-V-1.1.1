@@ -1,0 +1,28 @@
+{
+  "packet_id": "PKT-CANDIDATE-normalized-result",
+  "packet_type": "CANDIDATE_STRATEGY",
+  "payload": {
+    "candidate_id": "normalized-result",
+    "mission_id": "P0-BOOTSTRAP-001",
+    "operations": [
+      {
+        "content": "import math\nfrom enum import Enum\n\n\nclass Sign(str, Enum):\n    POSITIVE = \"positive\"\n    NEGATIVE = \"negative\"\n    ZERO = \"zero\"\n\n\ndef _validate(value):\n    if isinstance(value, bool) or not isinstance(value, (int, float)):\n        raise TypeError(\"unsupported numeric input\")\n    if isinstance(value, float) and math.isnan(value):\n        raise ValueError(\"NaN has no sign\")\n\n\ndef classify(value):\n    _validate(value)\n    if value > 0:\n        return Sign.POSITIVE.value\n    if value < 0:\n        return Sign.NEGATIVE.value\n    return Sign.ZERO.value\n",
+        "path": "calculator.py",
+        "type": "write"
+      },
+      {
+        "content": "# Classification Contract\n\nValidation and classification are separate. Results use the Sign vocabulary.\n",
+        "path": "CONTRACT.md",
+        "type": "write"
+      },
+      {
+        "content": "# Design\n\nThe normalized-result candidate favors extensibility and explicit result semantics.\n",
+        "path": "DESIGN.md",
+        "type": "write"
+      }
+    ],
+    "repair_operations": [],
+    "strategy": "Separate validation, comparison, and result vocabulary into explicit components."
+  },
+  "schema": "prometheus.packet.v1"
+}

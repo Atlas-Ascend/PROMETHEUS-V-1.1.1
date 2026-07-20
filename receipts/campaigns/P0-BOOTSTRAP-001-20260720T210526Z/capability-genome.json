@@ -1,0 +1,15 @@
+{
+  "capabilities": [
+    "isolated-git-worktree-generation",
+    "deterministic-candidate-operations",
+    "local-test-execution",
+    "adversarial-challenge",
+    "repair-before-promotion",
+    "hash-verifiable-receipt"
+  ],
+  "evidence_receipt_hash": "dc3c6f35fa6140d7f201fc134fed52b3a347492359dddade475eae2beb5d1ca9",
+  "mission_id": "P0-BOOTSTRAP-001",
+  "promoted_candidate": "minimal-boundary",
+  "run_id": "P0-BOOTSTRAP-001-20260720T210526Z",
+  "schema": "prometheus.capability-genome.v1"
+}

@@ -8,6 +8,26 @@
 - **Implementation status:** local executable kernel
 - **Bridge baseline:** ServerForge wired from startup; live apply awaits authorized Discord credentials
 
+## Reconciled local proof — 2026-07-20
+
+The current retained P0 campaign is `P0-BOOTSTRAP-001-20260720T210612Z`.
+It generated six typed packets, created three distinct candidate commits in
+isolated Git worktrees, executed and hashed six subprocess evidence records,
+selected `minimal-boundary` by measured score, captured adversarial exit codes
+`1 → 0`, applied repair commit
+`aabce9e973432203daacd0df3eeb132611714157`, retested, and promoted four
+hash-verified artifacts. The 14-event ledger, promotion receipt, capability
+genome, and run-level Build Truth are retained under
+`receipts/campaigns/P0-BOOTSTRAP-001-20260720T210612Z/`.
+
+- **Receipt hash:** `af7df0bd4bc1e6428dec838fd0f750f627869a6449ced99b672e2247ea8874af`
+- **Receipt verification:** valid after packet, execution stream, arbitration,
+  ledger, and promoted-artifact re-hashing
+- **Kernel regression suite:** 13 tests passed
+- **P0 state:** proven locally
+- **P1 state:** blocked pending explicit authorization and Discord credentials;
+  no live Discord deployment is claimed
+
 ## P0 claim
 
 Given a declarative mission and a local seed project, PROMETHEUS can create three or more deterministic candidate implementations in isolated Git worktrees, run real commands against each, rank viable candidates, adversarially challenge the leader, apply a declared repair when the challenge exposes a failure, promote one passing result, and emit a hash-verifiable receipt and capability genome.

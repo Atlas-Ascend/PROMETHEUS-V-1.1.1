@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prometheus.local/schemas/packet.schema.json",
+  "title": "PROMETHEUS Command-to-Proof Packet",
+  "type": "object",
+  "required": ["schema", "packet_id", "packet_type", "payload"],
+  "properties": {
+    "schema": {"const": "prometheus.packet.v1"},
+    "packet_id": {"type": "string", "pattern": "^PKT-[A-Za-z0-9-]+$"},
+    "packet_type": {
+      "enum": ["MISSION", "CANDIDATE_STRATEGY", "ARBITRATION", "PROMOTION_DECISION"]
+    },
+    "payload": {"type": "object"}
+  },
+  "additionalProperties": false
+}

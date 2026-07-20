@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 import subprocess
+import sys
 import time
 from pathlib import Path
 from typing import Any
@@ -49,12 +50,18 @@ def run_command(
     timeout_seconds: int = 60,
     max_output_chars: int = 100_000,
 ) -> CommandResult:
+    resolved_command = list(command)
+    if resolved_command and resolved_command[0] == "python":
+        # Missions authorize the Python runtime by capability name.  Use the
+        # interpreter running PROMETHEUS so the same mission is portable to
+        # hosts that expose only ``python3`` (or a virtual-environment path).
+        resolved_command[0] = sys.executable
     started = time.monotonic()
     try:
         process = subprocess.run(
-            command,
+            resolved_command,
             cwd=cwd,
-            env=(os.environ | env) if env else None,
+            env=os.environ | {"PYTHONDONTWRITEBYTECODE": "1", "PYTHONUTF8": "1"} | (env or {}),
             text=True,
             capture_output=True,
             check=False,
@@ -71,8 +78,13 @@ def run_command(
         stdout = captured_stdout[-max_output_chars:]
         stderr = (captured_stderr + f"\ncommand timed out after {timeout_seconds}s")[-max_output_chars:]
         timed_out = True
+    except OSError as error:
+        exit_code = 127
+        stdout = ""
+        stderr = f"{type(error).__name__}: {error}"
+        timed_out = False
     return CommandResult(
-        command=command,
+        command=resolved_command,
         exit_code=exit_code,
         stdout=stdout,
         stderr=stderr,

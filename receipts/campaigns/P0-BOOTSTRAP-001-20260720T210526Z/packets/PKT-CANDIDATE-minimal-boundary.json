@@ -1,0 +1,24 @@
+{
+  "packet_id": "PKT-CANDIDATE-minimal-boundary",
+  "packet_type": "CANDIDATE_STRATEGY",
+  "payload": {
+    "candidate_id": "minimal-boundary",
+    "mission_id": "P0-BOOTSTRAP-001",
+    "operations": [
+      {
+        "content": "def classify(value):\n    \"\"\"Classify a number by sign.\"\"\"\n    if value > 0:\n        return \"positive\"\n    if value < 0:\n        return \"negative\"\n    return \"zero\"\n",
+        "path": "calculator.py",
+        "type": "write"
+      }
+    ],
+    "repair_operations": [
+      {
+        "content": "import math\n\n\ndef classify(value):\n    \"\"\"Classify a finite int or float by sign.\"\"\"\n    if isinstance(value, bool) or not isinstance(value, (int, float)):\n        raise TypeError(\"value must be an int or float, excluding bool\")\n    if isinstance(value, float) and math.isnan(value):\n        raise ValueError(\"NaN has no sign\")\n    if value > 0:\n        return \"positive\"\n    if value < 0:\n        return \"negative\"\n    return \"zero\"\n",
+        "path": "calculator.py",
+        "type": "write"
+      }
+    ],
+    "strategy": "Apply the smallest possible zero-boundary correction."
+  },
+  "schema": "prometheus.packet.v1"
+}

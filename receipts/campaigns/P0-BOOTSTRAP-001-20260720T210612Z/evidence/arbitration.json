@@ -1,0 +1,26 @@
+{
+  "leader": "minimal-boundary",
+  "ranking": [
+    {
+      "candidate_id": "minimal-boundary",
+      "decision": "PROVISIONAL_LEADER",
+      "reason": "highest measured score",
+      "score": 999,
+      "standard_passed": true
+    },
+    {
+      "candidate_id": "strict-contract",
+      "decision": "REJECTED",
+      "reason": "lower measured score or failed standard gate",
+      "score": 998,
+      "standard_passed": true
+    },
+    {
+      "candidate_id": "normalized-result",
+      "decision": "REJECTED",
+      "reason": "lower measured score or failed standard gate",
+      "score": 997,
+      "standard_passed": true
+    }
+  ]
+}

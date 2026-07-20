@@ -1,0 +1,12 @@
+{
+  "packet_id": "PKT-PROMOTION",
+  "packet_type": "PROMOTION_DECISION",
+  "payload": {
+    "candidate_id": "minimal-boundary",
+    "challenge_passed": true,
+    "decision": "PROMOTE",
+    "repairs_applied": true,
+    "standard_passed": true
+  },
+  "schema": "prometheus.packet.v1"
+}

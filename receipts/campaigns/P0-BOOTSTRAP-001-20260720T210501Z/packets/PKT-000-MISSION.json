@@ -1,0 +1,10 @@
+{
+  "packet_id": "PKT-000-MISSION",
+  "packet_type": "MISSION",
+  "payload": {
+    "mission_id": "P0-BOOTSTRAP-001",
+    "mission_sha256": "325a2e5da06295fba7cb1741a9fb28e31f36afdede5419375f925d40147c9f65",
+    "objective": "Repair numeric sign classification while preserving a strict, explicit input contract."
+  },
+  "schema": "prometheus.packet.v1"
+}

@@ -1,0 +1,25 @@
+{
+  "capability_genome": "capability-genome.json",
+  "external_claims": {
+    "discord_live_deployment": "NOT_CLAIMED"
+  },
+  "mission_id": "P0-BOOTSTRAP-001",
+  "proven_claims": [
+    "mission-interpreted",
+    "packets-generated",
+    "three-distinct-candidates",
+    "git-worktree-isolation",
+    "real-subprocess-execution",
+    "hashed-execution-evidence",
+    "measured-arbitration",
+    "adversarial-challenge",
+    "repair-and-retest",
+    "promotion-receipt",
+    "capability-genome"
+  ],
+  "receipt": "promotion-receipt.json",
+  "receipt_hash": "af7df0bd4bc1e6428dec838fd0f750f627869a6449ced99b672e2247ea8874af",
+  "run_id": "P0-BOOTSTRAP-001-20260720T210612Z",
+  "schema": "prometheus.build-truth.v1",
+  "state": "PROVEN"
+}

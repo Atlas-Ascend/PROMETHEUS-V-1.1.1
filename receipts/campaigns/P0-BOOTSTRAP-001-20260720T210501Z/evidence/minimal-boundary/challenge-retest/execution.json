@@ -1,0 +1,21 @@
+{
+  "command": [
+    "/usr/bin/python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "adversarial_tests",
+    "-v"
+  ],
+  "duration_ms": 43,
+  "exit_code": 0,
+  "passed": true,
+  "stderr": "test_boolean_is_not_silently_treated_as_one (test_contract.AdversarialContractTests.test_boolean_is_not_silently_treated_as_one) ... ok\ntest_nan_has_no_sign (test_contract.AdversarialContractTests.test_nan_has_no_sign) ... ok\ntest_string_is_rejected (test_contract.AdversarialContractTests.test_string_is_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n",
+  "stderr_path": "evidence/minimal-boundary/challenge-retest/stderr.log",
+  "stderr_sha256": "af6e3bb9c41527a57dcc17ee61c2afb12b762addf957fa7afdbd296e5507cdd2",
+  "stdout": "",
+  "stdout_path": "evidence/minimal-boundary/challenge-retest/stdout.log",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "timed_out": false
+}

@@ -1,0 +1,23 @@
+{
+  "packet_id": "PKT-CANDIDATE-strict-contract",
+  "packet_type": "CANDIDATE_STRATEGY",
+  "payload": {
+    "candidate_id": "strict-contract",
+    "mission_id": "P0-BOOTSTRAP-001",
+    "operations": [
+      {
+        "content": "import math\n\n\ndef classify(value):\n    \"\"\"Classify a finite int or float by sign.\"\"\"\n    if isinstance(value, bool) or not isinstance(value, (int, float)):\n        raise TypeError(\"value must be an int or float, excluding bool\")\n    if isinstance(value, float) and math.isnan(value):\n        raise ValueError(\"NaN has no sign\")\n    if value > 0:\n        return \"positive\"\n    if value < 0:\n        return \"negative\"\n    return \"zero\"\n",
+        "path": "calculator.py",
+        "type": "write"
+      },
+      {
+        "content": "# Numeric Contract\n\nAccepted: finite integers and floats. Rejected: booleans, strings, objects, and NaN.\n",
+        "path": "CONTRACT.md",
+        "type": "write"
+      }
+    ],
+    "repair_operations": [],
+    "strategy": "Define and implement a strict numeric contract before classification."
+  },
+  "schema": "prometheus.packet.v1"
+}

@@ -1,0 +1,21 @@
+{
+  "command": [
+    "/usr/bin/python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-v"
+  ],
+  "duration_ms": 64,
+  "exit_code": 0,
+  "passed": true,
+  "stderr": "test_negative (test_calculator.CalculatorTests.test_negative) ... ok\ntest_positive (test_calculator.CalculatorTests.test_positive) ... ok\ntest_zero (test_calculator.CalculatorTests.test_zero) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n",
+  "stderr_path": "evidence/minimal-boundary/standard-initial/stderr.log",
+  "stderr_sha256": "dde5e045c1cff661646717aeae36a9ec998b8e84b0ea9bbc768abd9940bbd67c",
+  "stdout": "",
+  "stdout_path": "evidence/minimal-boundary/standard-initial/stdout.log",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "timed_out": false
+}

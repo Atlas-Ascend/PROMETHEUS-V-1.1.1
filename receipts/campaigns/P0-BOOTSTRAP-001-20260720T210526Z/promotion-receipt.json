@@ -1,0 +1,296 @@
+{
+  "arbitration": {
+    "path": "evidence/arbitration.json",
+    "sha256": "c1ef7c6b6edbdf2206f0596948792f08030388ffcffbfb18ba028d0bc0b0b748"
+  },
+  "artifacts": [
+    {
+      "bytes": 201,
+      "path": "README.md",
+      "sha256": "0b2df1963262df088c2e9597a2443fafac0d8e5001e0bc3899938aee169ea6c7"
+    },
+    {
+      "bytes": 526,
+      "path": "adversarial_tests/test_contract.py",
+      "sha256": "40e01cffcf868b343653503799abcd94068a6ba4d7704ed1a1ff1f76b7e2ab7c"
+    },
+    {
+      "bytes": 434,
+      "path": "calculator.py",
+      "sha256": "8654d00c94bca9c94e5b3b02685e2386f094fc9d2c997f5f333e5832064ed5f4"
+    },
+    {
+      "bytes": 392,
+      "path": "tests/test_calculator.py",
+      "sha256": "5da5f864eef0347f7708c3d23817cfb028e75f41a83d2cb7cb5904377552e2a8"
+    }
+  ],
+  "candidate_results": [
+    {
+      "candidate_id": "minimal-boundary",
+      "challenge": {
+        "command": [
+          "/usr/bin/python3",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "adversarial_tests",
+          "-v"
+        ],
+        "duration_ms": 43,
+        "exit_code": 0,
+        "passed": true,
+        "stderr": "test_boolean_is_not_silently_treated_as_one (test_contract.AdversarialContractTests.test_boolean_is_not_silently_treated_as_one) ... ok\ntest_nan_has_no_sign (test_contract.AdversarialContractTests.test_nan_has_no_sign) ... ok\ntest_string_is_rejected (test_contract.AdversarialContractTests.test_string_is_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "timed_out": false
+      },
+      "challenge_attempts": [
+        {
+          "command": [
+            "/usr/bin/python3",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "adversarial_tests",
+            "-v"
+          ],
+          "duration_ms": 43,
+          "exit_code": 1,
+          "passed": false,
+          "stderr": "test_boolean_is_not_silently_treated_as_one (test_contract.AdversarialContractTests.test_boolean_is_not_silently_treated_as_one) ... FAIL\ntest_nan_has_no_sign (test_contract.AdversarialContractTests.test_nan_has_no_sign) ... FAIL\ntest_string_is_rejected (test_contract.AdversarialContractTests.test_string_is_rejected) ... ok\n\n======================================================================\nFAIL: test_boolean_is_not_silently_treated_as_one (test_contract.AdversarialContractTests.test_boolean_is_not_silently_treated_as_one)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/eden/Ghost/PROMETHEUS-HEPHAESTUS-20260720-140043/receipts/campaigns/P0-BOOTSTRAP-001-20260720T210526Z/worktrees/minimal-boundary/adversarial_tests/test_contract.py\", line 8, in test_boolean_is_not_silently_treated_as_one\n    with self.assertRaises(TypeError):\nAssertionError: TypeError not raised\n\n======================================================================\nFAIL: test_nan_has_no_sign (test_contract.AdversarialContractTests.test_nan_has_no_sign)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/eden/Ghost/PROMETHEUS-HEPHAESTUS-20260720-140043/receipts/campaigns/P0-BOOTSTRAP-001-20260720T210526Z/worktrees/minimal-boundary/adversarial_tests/test_contract.py\", line 12, in test_nan_has_no_sign\n    with self.assertRaises(ValueError):\nAssertionError: ValueError not raised\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nFAILED (failures=2)\n",
+          "stdout": "",
+          "timed_out": false
+        },
+        {
+          "command": [
+            "/usr/bin/python3",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "adversarial_tests",
+            "-v"
+          ],
+          "duration_ms": 43,
+          "exit_code": 0,
+          "passed": true,
+          "stderr": "test_boolean_is_not_silently_treated_as_one (test_contract.AdversarialContractTests.test_boolean_is_not_silently_treated_as_one) ... ok\ntest_nan_has_no_sign (test_contract.AdversarialContractTests.test_nan_has_no_sign) ... ok\ntest_string_is_rejected (test_contract.AdversarialContractTests.test_string_is_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n",
+          "stdout": "",
+          "timed_out": false
+        }
+      ],
+      "commit_sha": "bf07eadd6a9926bce5b894440b3b0c238ddbf9de",
+      "operation_count": 1,
+      "repair_commits": [
+        "6bb7831c217cb197ec4f043b6cff6f4d7802e1f1"
+      ],
+      "score": 999,
+      "standard_test": {
+        "command": [
+          "/usr/bin/python3",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-v"
+        ],
+        "duration_ms": 43,
+        "exit_code": 0,
+        "passed": true,
+        "stderr": "test_negative (test_calculator.CalculatorTests.test_negative) ... ok\ntest_positive (test_calculator.CalculatorTests.test_positive) ... ok\ntest_zero (test_calculator.CalculatorTests.test_zero) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "timed_out": false
+      },
+      "strategy": "Apply the smallest possible zero-boundary correction.",
+      "workspace": "worktrees/minimal-boundary"
+    },
+    {
+      "candidate_id": "strict-contract",
+      "challenge": null,
+      "challenge_attempts": [],
+      "commit_sha": "bf3bded77762a5e84b37bd220294add643592aad",
+      "operation_count": 2,
+      "repair_commits": [],
+      "score": 998,
+      "standard_test": {
+        "command": [
+          "/usr/bin/python3",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-v"
+        ],
+        "duration_ms": 43,
+        "exit_code": 0,
+        "passed": true,
+        "stderr": "test_negative (test_calculator.CalculatorTests.test_negative) ... ok\ntest_positive (test_calculator.CalculatorTests.test_positive) ... ok\ntest_zero (test_calculator.CalculatorTests.test_zero) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "timed_out": false
+      },
+      "strategy": "Define and implement a strict numeric contract before classification.",
+      "workspace": "worktrees/strict-contract"
+    },
+    {
+      "candidate_id": "normalized-result",
+      "challenge": null,
+      "challenge_attempts": [],
+      "commit_sha": "a03e2d208b54be42f05e19b10ff25353d4eca712",
+      "operation_count": 3,
+      "repair_commits": [],
+      "score": 997,
+      "standard_test": {
+        "command": [
+          "/usr/bin/python3",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-v"
+        ],
+        "duration_ms": 43,
+        "exit_code": 0,
+        "passed": true,
+        "stderr": "test_negative (test_calculator.CalculatorTests.test_negative) ... ok\ntest_positive (test_calculator.CalculatorTests.test_positive) ... ok\ntest_zero (test_calculator.CalculatorTests.test_zero) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n",
+        "stdout": "",
+        "timed_out": false
+      },
+      "strategy": "Separate validation, comparison, and result vocabulary into explicit components.",
+      "workspace": "worktrees/normalized-result"
+    }
+  ],
+  "created_at": "2026-07-20T21:05:26.995867+00:00",
+  "event_ledger": {
+    "chain_head": "20a30d34de37b72f343cdf277c27b30d80c662fa1074748cfc1c90cacd10ba53",
+    "events": 14,
+    "path": "events.jsonl",
+    "sha256": "dbc048dc1bd21543630f8b77ee262035c18176e6549159001c8315ecef25e425"
+  },
+  "execution_evidence": [
+    {
+      "candidate_id": "minimal-boundary",
+      "path": "evidence/minimal-boundary/standard-initial/execution.json",
+      "phase": "standard-initial",
+      "sha256": "1cf1c9717b69fcaeffd06b0883eabae6fb0f8ebf4cd12dbb23a9a41c87288ff2",
+      "stderr_path": "evidence/minimal-boundary/standard-initial/stderr.log",
+      "stderr_sha256": "dde5e045c1cff661646717aeae36a9ec998b8e84b0ea9bbc768abd9940bbd67c",
+      "stdout_path": "evidence/minimal-boundary/standard-initial/stdout.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "candidate_id": "strict-contract",
+      "path": "evidence/strict-contract/standard-initial/execution.json",
+      "phase": "standard-initial",
+      "sha256": "c42d236161069bced8c78caeb43fab77b63c371b6b378c8b3e16c579e216ac63",
+      "stderr_path": "evidence/strict-contract/standard-initial/stderr.log",
+      "stderr_sha256": "dde5e045c1cff661646717aeae36a9ec998b8e84b0ea9bbc768abd9940bbd67c",
+      "stdout_path": "evidence/strict-contract/standard-initial/stdout.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "candidate_id": "normalized-result",
+      "path": "evidence/normalized-result/standard-initial/execution.json",
+      "phase": "standard-initial",
+      "sha256": "e95bfb64b0872dcc771dde46b53d24c51e071a3430a491b6b847f579405d68d9",
+      "stderr_path": "evidence/normalized-result/standard-initial/stderr.log",
+      "stderr_sha256": "dde5e045c1cff661646717aeae36a9ec998b8e84b0ea9bbc768abd9940bbd67c",
+      "stdout_path": "evidence/normalized-result/standard-initial/stdout.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "candidate_id": "minimal-boundary",
+      "path": "evidence/minimal-boundary/challenge-initial/execution.json",
+      "phase": "challenge-initial",
+      "sha256": "afa161487f8d12f098cad7998ea8d6dc78a85041e8eced625c96fc78783a9540",
+      "stderr_path": "evidence/minimal-boundary/challenge-initial/stderr.log",
+      "stderr_sha256": "e53bdf913fde4957dd23f04580e9a158e94a00944241bede7b3ba5c9647681b5",
+      "stdout_path": "evidence/minimal-boundary/challenge-initial/stdout.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "candidate_id": "minimal-boundary",
+      "path": "evidence/minimal-boundary/standard-retest/execution.json",
+      "phase": "standard-retest",
+      "sha256": "c52ce2538c10aef2362e235be8ac1009e90bab74cef5eab82eee758ce000cacb",
+      "stderr_path": "evidence/minimal-boundary/standard-retest/stderr.log",
+      "stderr_sha256": "dde5e045c1cff661646717aeae36a9ec998b8e84b0ea9bbc768abd9940bbd67c",
+      "stdout_path": "evidence/minimal-boundary/standard-retest/stdout.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "candidate_id": "minimal-boundary",
+      "path": "evidence/minimal-boundary/challenge-retest/execution.json",
+      "phase": "challenge-retest",
+      "sha256": "d5e6d2d426546284efd5c94b7c46ca150d51e13929421fc3406b578e0b4d5e1d",
+      "stderr_path": "evidence/minimal-boundary/challenge-retest/stderr.log",
+      "stderr_sha256": "af6e3bb9c41527a57dcc17ee61c2afb12b762addf957fa7afdbd296e5507cdd2",
+      "stdout_path": "evidence/minimal-boundary/challenge-retest/stdout.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "execution_policy": {
+    "allowed_executables": [
+      "python"
+    ],
+    "command_timeout_seconds": 30,
+    "max_operations_per_candidate": 20,
+    "max_output_chars": 50000
+  },
+  "leader": "minimal-boundary",
+  "mission_id": "P0-BOOTSTRAP-001",
+  "mission_sha256": "325a2e5da06295fba7cb1741a9fb28e31f36afdede5419375f925d40147c9f65",
+  "objective": "Repair numeric sign classification while preserving a strict, explicit input contract.",
+  "packets": [
+    {
+      "packet_id": "PKT-000-MISSION",
+      "packet_type": "MISSION",
+      "path": "packets/PKT-000-MISSION.json",
+      "sha256": "f816fec073cdddebb5612f13b9f5b7b1bb5d6d6fe01304d8fcf1bdf7ea85a1a4"
+    },
+    {
+      "packet_id": "PKT-CANDIDATE-minimal-boundary",
+      "packet_type": "CANDIDATE_STRATEGY",
+      "path": "packets/PKT-CANDIDATE-minimal-boundary.json",
+      "sha256": "a7d4c18413314f266cd6c6a18300aa50d8f56b382863769c053ffde7c2b9d7b5"
+    },
+    {
+      "packet_id": "PKT-CANDIDATE-strict-contract",
+      "packet_type": "CANDIDATE_STRATEGY",
+      "path": "packets/PKT-CANDIDATE-strict-contract.json",
+      "sha256": "c3f77672e4ac0aa5ba16a93c238029ad254dbdc0728ce845ab9534a3f455cb17"
+    },
+    {
+      "packet_id": "PKT-CANDIDATE-normalized-result",
+      "packet_type": "CANDIDATE_STRATEGY",
+      "path": "packets/PKT-CANDIDATE-normalized-result.json",
+      "sha256": "ef90d6e40fd39ff174a7ffa7552f6ceaa4bbc46277c1b05ec6cc7c58e4a77c77"
+    },
+    {
+      "packet_id": "PKT-ARBITRATION",
+      "packet_type": "ARBITRATION",
+      "path": "packets/PKT-ARBITRATION.json",
+      "sha256": "a8f9d339af1f3e0a69a051c6324161eb71b8d38bb774f71bc415782629e546b1"
+    },
+    {
+      "packet_id": "PKT-PROMOTION",
+      "packet_type": "PROMOTION_DECISION",
+      "path": "packets/PKT-PROMOTION.json",
+      "sha256": "fccf4b2e6f10d8790f4fcb7a75320d2d583aea73e727d318650cbce67711a56b"
+    }
+  ],
+  "promoted_commit": "6bb7831c217cb197ec4f043b6cff6f4d7802e1f1",
+  "receipt_hash": "dc3c6f35fa6140d7f201fc134fed52b3a347492359dddade475eae2beb5d1ca9",
+  "repairs_applied": true,
+  "run_id": "P0-BOOTSTRAP-001-20260720T210526Z",
+  "runtime": {
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3"
+  },
+  "schema": "prometheus.receipt.v1",
+  "seed_commit": "ecc9ed730d060f1301b8733842cc56373f19d107"
+}

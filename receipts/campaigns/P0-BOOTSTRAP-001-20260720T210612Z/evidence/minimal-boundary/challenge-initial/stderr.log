@@ -1,0 +1,24 @@
+test_boolean_is_not_silently_treated_as_one (test_contract.AdversarialContractTests.test_boolean_is_not_silently_treated_as_one) ... FAIL
+test_nan_has_no_sign (test_contract.AdversarialContractTests.test_nan_has_no_sign) ... FAIL
+test_string_is_rejected (test_contract.AdversarialContractTests.test_string_is_rejected) ... ok
+
+======================================================================
+FAIL: test_boolean_is_not_silently_treated_as_one (test_contract.AdversarialContractTests.test_boolean_is_not_silently_treated_as_one)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/eden/Ghost/PROMETHEUS-HEPHAESTUS-20260720-140043/receipts/campaigns/P0-BOOTSTRAP-001-20260720T210612Z/worktrees/minimal-boundary/adversarial_tests/test_contract.py", line 8, in test_boolean_is_not_silently_treated_as_one
+    with self.assertRaises(TypeError):
+AssertionError: TypeError not raised
+
+======================================================================
+FAIL: test_nan_has_no_sign (test_contract.AdversarialContractTests.test_nan_has_no_sign)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/eden/Ghost/PROMETHEUS-HEPHAESTUS-20260720-140043/receipts/campaigns/P0-BOOTSTRAP-001-20260720T210612Z/worktrees/minimal-boundary/adversarial_tests/test_contract.py", line 12, in test_nan_has_no_sign
+    with self.assertRaises(ValueError):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+FAILED (failures=2)

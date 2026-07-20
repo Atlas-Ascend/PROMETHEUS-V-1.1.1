@@ -1,0 +1,8 @@
+test_boolean_is_not_silently_treated_as_one (test_contract.AdversarialContractTests.test_boolean_is_not_silently_treated_as_one) ... ok
+test_nan_has_no_sign (test_contract.AdversarialContractTests.test_nan_has_no_sign) ... ok
+test_string_is_rejected (test_contract.AdversarialContractTests.test_string_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK

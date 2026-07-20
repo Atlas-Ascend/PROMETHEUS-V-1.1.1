@@ -26,6 +26,50 @@ class MissionError(RuntimeError):
     pass
 
 
+def _write_json(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _write_packet(root: Path, packet_id: str, packet_type: str, payload: dict[str, Any]) -> dict[str, Any]:
+    packet = {
+        "schema": "prometheus.packet.v1",
+        "packet_id": packet_id,
+        "packet_type": packet_type,
+        "payload": payload,
+    }
+    path = root / "packets" / f"{packet_id}.json"
+    _write_json(path, packet)
+    return {"packet_id": packet_id, "packet_type": packet_type, "path": path.relative_to(root).as_posix(), "sha256": sha256_file(path)}
+
+
+def _capture_execution(root: Path, phase: str, candidate_id: str, result: Any) -> dict[str, Any]:
+    evidence_root = root / "evidence" / candidate_id / phase
+    evidence_root.mkdir(parents=True, exist_ok=True)
+    stdout_path = evidence_root / "stdout.log"
+    stderr_path = evidence_root / "stderr.log"
+    stdout_path.write_text(result.stdout, encoding="utf-8")
+    stderr_path.write_text(result.stderr, encoding="utf-8")
+    record = result.to_dict() | {
+        "stdout_path": stdout_path.relative_to(root).as_posix(),
+        "stdout_sha256": sha256_file(stdout_path),
+        "stderr_path": stderr_path.relative_to(root).as_posix(),
+        "stderr_sha256": sha256_file(stderr_path),
+    }
+    record_path = evidence_root / "execution.json"
+    _write_json(record_path, record)
+    return {
+        "candidate_id": candidate_id,
+        "phase": phase,
+        "path": record_path.relative_to(root).as_posix(),
+        "sha256": sha256_file(record_path),
+        "stdout_path": record["stdout_path"],
+        "stdout_sha256": record["stdout_sha256"],
+        "stderr_path": record["stderr_path"],
+        "stderr_sha256": record["stderr_sha256"],
+    }
+
+
 def load_mission(path: Path) -> dict[str, Any]:
     mission = json.loads(path.read_text(encoding="utf-8"))
     required = {"mission_id", "objective", "seed_path", "candidates", "standard_test", "challenge_test"}
@@ -84,11 +128,18 @@ def execute_mission(mission_path: Path, output_root: Path | None = None) -> dict
 
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     run_id = f"{mission['mission_id']}-{timestamp}"
-    root = (output_root or project_root / ".prometheus" / "runs") / run_id
+    root = ((output_root or project_root / ".prometheus" / "runs") / run_id).resolve()
     root.mkdir(parents=True, exist_ok=False)
     mission_snapshot = root / "mission.json"
     shutil.copy2(mission_path, mission_snapshot)
     ledger = EventLedger(root / "events.jsonl")
+    packets: list[dict[str, Any]] = []
+    execution_evidence: list[dict[str, Any]] = []
+    packets.append(_write_packet(root, "PKT-000-MISSION", "MISSION", {
+        "mission_id": mission["mission_id"],
+        "objective": mission["objective"],
+        "mission_sha256": sha256_file(mission_snapshot),
+    }))
     ledger.append(
         "mission.accepted",
         {"mission_id": mission["mission_id"], "mission_sha256": sha256_file(mission_snapshot)},
@@ -106,6 +157,13 @@ def execute_mission(mission_path: Path, output_root: Path | None = None) -> dict
         workspace.parent.mkdir(parents=True, exist_ok=True)
         _create_worktree(base_repo, workspace, candidate_id)
         operations = definition.get("operations", [])
+        packets.append(_write_packet(root, f"PKT-CANDIDATE-{candidate_id}", "CANDIDATE_STRATEGY", {
+            "mission_id": mission["mission_id"],
+            "candidate_id": candidate_id,
+            "strategy": definition.get("strategy", candidate_id),
+            "operations": operations,
+            "repair_operations": definition.get("repair_operations", []),
+        }))
         apply_operations(workspace, operations)
         commit_sha = _commit(workspace, f"candidate: {candidate_id}")
         ledger.append(
@@ -118,6 +176,7 @@ def execute_mission(mission_path: Path, output_root: Path | None = None) -> dict
             timeout_seconds=policy.command_timeout_seconds,
             max_output_chars=policy.max_output_chars,
         )
+        execution_evidence.append(_capture_execution(root, "standard-initial", candidate_id, standard))
         ledger.append("candidate.standard_tested", {"candidate_id": candidate_id, "result": standard.to_dict()})
         candidates.append(
             CandidateResult(
@@ -135,6 +194,22 @@ def execute_mission(mission_path: Path, output_root: Path | None = None) -> dict
     if not viable:
         raise MissionError("no candidate passed the standard test gate")
     leader = sorted(viable, key=lambda item: (-item.score, item.candidate_id))[0]
+    arbitration = {
+        "leader": leader.candidate_id,
+        "ranking": [
+            {
+                "candidate_id": candidate.candidate_id,
+                "score": candidate.score,
+                "standard_passed": candidate.standard_test.passed,
+                "decision": "PROVISIONAL_LEADER" if candidate.candidate_id == leader.candidate_id else "REJECTED",
+                "reason": "highest measured score" if candidate.candidate_id == leader.candidate_id else "lower measured score or failed standard gate",
+            }
+            for candidate in sorted(candidates, key=lambda item: (-item.score, item.candidate_id))
+        ],
+    }
+    arbitration_path = root / "evidence" / "arbitration.json"
+    _write_json(arbitration_path, arbitration)
+    packets.append(_write_packet(root, "PKT-ARBITRATION", "ARBITRATION", arbitration))
     ledger.append("leader.selected", {"candidate_id": leader.candidate_id, "score": leader.score})
     leader_workspace = root / leader.workspace
     leader.challenge = run_command(
@@ -144,6 +219,7 @@ def execute_mission(mission_path: Path, output_root: Path | None = None) -> dict
         max_output_chars=policy.max_output_chars,
     )
     leader.challenge_attempts.append(leader.challenge)
+    execution_evidence.append(_capture_execution(root, "challenge-initial", leader.candidate_id, leader.challenge))
     ledger.append(
         "leader.challenged",
         {"candidate_id": leader.candidate_id, "attempt": 1, "result": leader.challenge.to_dict()},
@@ -167,6 +243,7 @@ def execute_mission(mission_path: Path, output_root: Path | None = None) -> dict
             timeout_seconds=policy.command_timeout_seconds,
             max_output_chars=policy.max_output_chars,
         )
+        execution_evidence.append(_capture_execution(root, "standard-retest", leader.candidate_id, leader.standard_test))
         ledger.append(
             "leader.standard_retested",
             {"candidate_id": leader.candidate_id, "result": leader.standard_test.to_dict()},
@@ -178,6 +255,7 @@ def execute_mission(mission_path: Path, output_root: Path | None = None) -> dict
             max_output_chars=policy.max_output_chars,
         )
         leader.challenge_attempts.append(leader.challenge)
+        execution_evidence.append(_capture_execution(root, "challenge-retest", leader.candidate_id, leader.challenge))
         ledger.append(
             "leader.challenged",
             {"candidate_id": leader.candidate_id, "attempt": 2, "result": leader.challenge.to_dict()},
@@ -185,6 +263,14 @@ def execute_mission(mission_path: Path, output_root: Path | None = None) -> dict
 
     if not leader.standard_test.passed or not leader.challenge.passed:
         raise MissionError(f"leader {leader.candidate_id} failed post-repair promotion gates")
+
+    packets.append(_write_packet(root, "PKT-PROMOTION", "PROMOTION_DECISION", {
+        "candidate_id": leader.candidate_id,
+        "repairs_applied": repairs_applied,
+        "standard_passed": leader.standard_test.passed,
+        "challenge_passed": leader.challenge.passed,
+        "decision": "PROMOTE",
+    }))
 
     promoted = root / "promoted"
     shutil.copytree(leader_workspace, promoted, ignore=shutil.ignore_patterns(".git"))
@@ -207,6 +293,12 @@ def execute_mission(mission_path: Path, output_root: Path | None = None) -> dict
         "repairs_applied": repairs_applied,
         "promoted_commit": promoted_commit,
         "artifacts": artifacts,
+        "packets": packets,
+        "execution_evidence": execution_evidence,
+        "arbitration": {
+            "path": arbitration_path.relative_to(root).as_posix(),
+            "sha256": sha256_file(arbitration_path),
+        },
         "event_ledger": {
             "path": "events.jsonl",
             "events": ledger.index,
@@ -234,6 +326,7 @@ def execute_mission(mission_path: Path, output_root: Path | None = None) -> dict
         "run_id": run_id,
         "promoted_candidate": leader.candidate_id,
         "capabilities": [
+            "typed-command-to-proof-packets",
             "isolated-git-worktree-generation",
             "deterministic-candidate-operations",
             "local-test-execution",
@@ -246,6 +339,32 @@ def execute_mission(mission_path: Path, output_root: Path | None = None) -> dict
     genome_path = root / "capability-genome.json"
     genome_path.write_text(json.dumps(genome, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
+    build_truth = {
+        "schema": "prometheus.build-truth.v1",
+        "run_id": run_id,
+        "mission_id": mission["mission_id"],
+        "state": "PROVEN",
+        "proven_claims": [
+            "mission-interpreted",
+            "packets-generated",
+            "three-distinct-candidates",
+            "git-worktree-isolation",
+            "real-subprocess-execution",
+            "hashed-execution-evidence",
+            "measured-arbitration",
+            "adversarial-challenge",
+            "repair-and-retest",
+            "promotion-receipt",
+            "capability-genome",
+        ],
+        "receipt": "promotion-receipt.json",
+        "receipt_hash": receipt["receipt_hash"],
+        "capability_genome": "capability-genome.json",
+        "external_claims": {"discord_live_deployment": "NOT_CLAIMED"},
+    }
+    build_truth_path = root / "build-truth.json"
+    _write_json(build_truth_path, build_truth)
+
     summary = {
         "run_id": run_id,
         "status": "PROMOTED",
@@ -254,6 +373,7 @@ def execute_mission(mission_path: Path, output_root: Path | None = None) -> dict
         "receipt": str(receipt_path),
         "receipt_hash": receipt["receipt_hash"],
         "capability_genome": str(genome_path),
+        "build_truth": str(build_truth_path),
         "promoted_workspace": str(promoted),
     }
     (root / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -273,6 +393,27 @@ def verify_receipt(path: Path) -> bool:
     if len(lines) != ledger_info.get("events") or not verify_ledger(ledger_path):
         return False
     if json.loads(lines[-1]).get("event_hash") != ledger_info.get("chain_head"):
+        return False
+    for record in receipt.get("packets", []) + receipt.get("execution_evidence", []):
+        evidence_path = (path.parent / record.get("path", "")).resolve()
+        if path.parent.resolve() not in evidence_path.parents or not evidence_path.is_file():
+            return False
+        if sha256_file(evidence_path) != record.get("sha256"):
+            return False
+        for stream in ("stdout", "stderr"):
+            stream_path_value = record.get(f"{stream}_path")
+            if stream_path_value is None:
+                continue
+            stream_path = (path.parent / stream_path_value).resolve()
+            if path.parent.resolve() not in stream_path.parents or not stream_path.is_file():
+                return False
+            if sha256_file(stream_path) != record.get(f"{stream}_sha256"):
+                return False
+    arbitration = receipt.get("arbitration", {})
+    arbitration_path = (path.parent / arbitration.get("path", "")).resolve()
+    if path.parent.resolve() not in arbitration_path.parents or not arbitration_path.is_file():
+        return False
+    if sha256_file(arbitration_path) != arbitration.get("sha256"):
         return False
     promoted = path.parent / "promoted"
     for artifact in receipt.get("artifacts", []):

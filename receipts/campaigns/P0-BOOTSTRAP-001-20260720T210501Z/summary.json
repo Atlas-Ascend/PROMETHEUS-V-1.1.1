@@ -1,0 +1,11 @@
+{
+  "build_truth": "/home/eden/Ghost/PROMETHEUS-HEPHAESTUS-20260720-140043/receipts/campaigns/P0-BOOTSTRAP-001-20260720T210501Z/build-truth.json",
+  "capability_genome": "/home/eden/Ghost/PROMETHEUS-HEPHAESTUS-20260720-140043/receipts/campaigns/P0-BOOTSTRAP-001-20260720T210501Z/capability-genome.json",
+  "leader": "minimal-boundary",
+  "promoted_workspace": "/home/eden/Ghost/PROMETHEUS-HEPHAESTUS-20260720-140043/receipts/campaigns/P0-BOOTSTRAP-001-20260720T210501Z/promoted",
+  "receipt": "/home/eden/Ghost/PROMETHEUS-HEPHAESTUS-20260720-140043/receipts/campaigns/P0-BOOTSTRAP-001-20260720T210501Z/promotion-receipt.json",
+  "receipt_hash": "87f599eb293f5b4435d1c05ae173630645c9e465955e5358acf5b085b10d0edd",
+  "repairs_applied": true,
+  "run_id": "P0-BOOTSTRAP-001-20260720T210501Z",
+  "status": "PROMOTED"
+}
