@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ghostatlas.local/schemas/workforce-task.schema.json",
+  "title": "PROMETHEUS Workforce Spine Task",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "task_id",
+    "outcome",
+    "surface",
+    "roles",
+    "approval_class",
+    "status",
+    "acceptance",
+    "proof_class",
+    "rollback"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "pattern": "^(P|X)-[0-9]{3}$"
+    },
+    "outcome": {
+      "type": "string",
+      "minLength": 1
+    },
+    "surface": {
+      "enum": [
+        "WORK",
+        "CODEX",
+        "HYBRID",
+        "HUMAN",
+        "DYNAMIC"
+      ]
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "maxItems": 5
+    },
+    "approval_class": {
+      "enum": [
+        "A0",
+        "A1",
+        "A2",
+        "A3"
+      ]
+    },
+    "status": {
+      "enum": [
+        "Not Started",
+        "Ready",
+        "In Progress",
+        "Local Verified",
+        "Remote Verified",
+        "Blocked External",
+        "Blocked Internal",
+        "Rejected",
+        "Rolled Back",
+        "Complete"
+      ]
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "acceptance": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "proof_class": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "E0",
+          "E1",
+          "E2",
+          "E3",
+          "E4",
+          "E5"
+        ]
+      },
+      "minItems": 1
+    },
+    "rollback": {
+      "type": "string",
+      "minLength": 1
+    },
+    "blocker": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "next": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

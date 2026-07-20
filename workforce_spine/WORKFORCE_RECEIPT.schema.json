@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ghostatlas.local/schemas/workforce-receipt.schema.json",
+  "title": "PROMETHEUS Workforce Spine Receipt",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "receipt_id",
+    "packet_id",
+    "task_id",
+    "timestamp",
+    "surface",
+    "active_roles",
+    "status",
+    "inputs",
+    "actions",
+    "outputs",
+    "tests",
+    "claim_unlocked",
+    "verdict",
+    "next_task"
+  ],
+  "properties": {
+    "receipt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packet_id": {
+      "const": "WSP-PROMETHEUS-20260719-EDGE-001"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^(P|X)-[0-9]{3}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "surface": {
+      "enum": [
+        "WORK",
+        "CODEX",
+        "HYBRID",
+        "HUMAN"
+      ]
+    },
+    "active_roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "status": {
+      "enum": [
+        "Not Started",
+        "Ready",
+        "In Progress",
+        "Local Verified",
+        "Remote Verified",
+        "Blocked External",
+        "Blocked Internal",
+        "Rejected",
+        "Rolled Back",
+        "Complete"
+      ]
+    },
+    "inputs": {
+      "type": "array"
+    },
+    "actions": {
+      "type": "array"
+    },
+    "outputs": {
+      "type": "array"
+    },
+    "tests": {
+      "type": "array"
+    },
+    "evidence_hashes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "blocker": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "claim_unlocked": {
+      "type": "string"
+    },
+    "verdict": {
+      "enum": [
+        "pass",
+        "fail",
+        "blocked",
+        "rolled_back"
+      ]
+    },
+    "next_task": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}
