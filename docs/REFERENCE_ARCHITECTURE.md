@@ -49,6 +49,27 @@ The bridge is additive and idempotent by default: it creates missing named resou
 | Proof | SHA-256 receipt/genome | signed attestations and ProofGrid publication |
 | External surface | Discord HTTP API v10 | ServerForge Gateway events and observatory |
 
+## Recursive execution plane
+
+P1 implements the model-backed candidate-generator port without changing P0:
+
+```mermaid
+flowchart TD
+    M[Self-build mission] --> W[Three Git worktrees]
+    W --> C[Parallel Codex exec]
+    C --> T[Per-candidate tests]
+    T --> L[Passing leader]
+    L --> A[Independent Codex challenge]
+    A --> R[Repair and retest]
+    R --> P[Proof commit]
+    P --> G[Confirmed Git push and draft PR]
+    C --> S[ServerForge events]
+    A --> S
+    P --> S
+```
+
+`CodexProvider` owns non-interactive model execution and transcript capture. `run_recursive_campaign` owns worktrees, concurrency, gates, arbitration, evidence, and promotion. `CaseStudyPublisher` maps bounded lifecycle events to the existing ServerForge topology. PowerShell scripts own Windows installation, authenticated operator preflight, release packaging, and the one-command campaign.
+
 ## State model
 
 `ACCEPTED → FORGING → TESTING → CHALLENGING → REPAIRING? → PROMOTED | FAILED`

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prometheus.local/schemas/recursive-receipt.schema.json",
+  "title": "PROMETHEUS Recursive Promotion Receipt",
+  "type": "object",
+  "required": [
+    "schema",
+    "run_id",
+    "mission_id",
+    "objective",
+    "created_at",
+    "mission_sha256",
+    "base_commit",
+    "candidate_results",
+    "leader",
+    "promoted_source_commit",
+    "promotion_branch",
+    "artifacts",
+    "codex_evidence",
+    "event_ledger",
+    "serverforge",
+    "receipt_hash"
+  ],
+  "properties": {
+    "schema": {"const": "prometheus.recursive-receipt.v1"},
+    "run_id": {"type": "string", "minLength": 1},
+    "mission_id": {"type": "string", "minLength": 1},
+    "objective": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "mission_sha256": {"$ref": "#/$defs/hash"},
+    "base_commit": {"type": "string", "minLength": 7},
+    "candidate_results": {"type": "array", "minItems": 3, "items": {"type": "object"}},
+    "leader": {"type": "string", "minLength": 1},
+    "adversarial_repair_commit": {"type": ["string", "null"]},
+    "promoted_source_commit": {"type": "string", "minLength": 7},
+    "promotion_branch": {"type": "string", "minLength": 1},
+    "artifacts": {"type": "array", "items": {"$ref": "#/$defs/artifact"}},
+    "codex_evidence": {"type": "array", "items": {"$ref": "#/$defs/artifact"}},
+    "event_ledger": {
+      "type": "object",
+      "required": ["path", "events", "chain_head", "sha256"],
+      "properties": {
+        "path": {"type": "string"},
+        "events": {"type": "integer", "minimum": 1},
+        "chain_head": {"$ref": "#/$defs/hash"},
+        "sha256": {"$ref": "#/$defs/hash"}
+      },
+      "additionalProperties": false
+    },
+    "serverforge": {
+      "type": "object",
+      "required": ["live", "publication_count"],
+      "properties": {
+        "live": {"type": "boolean"},
+        "publication_count": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "receipt_hash": {"$ref": "#/$defs/hash"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "artifact": {
+      "type": "object",
+      "required": ["path", "sha256", "bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/hash"},
+        "bytes": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    }
+  }
+}

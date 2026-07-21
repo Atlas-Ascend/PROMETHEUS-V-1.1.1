@@ -1,5 +1,16 @@
 # P1 ServerForge Discord Case Study
 
+## Current state
+
+The initial live deployment is complete and receipt-backed:
+
+- Campaign: `HYDRA-SERVERFORGE-20260719T023826Z`
+- Receipt: `26ccd3be5d15b170e24e54855db50f747ebf3c2fbfccac3622fb629b07665ffc`
+- ACL-orphan recoveries: `1`
+- Initial proof publications: `3`
+
+The next case-study layer is the recursive campaign. It publishes mission, candidate, challenge, repair, and promotion events into the verified topology while three Codex worktrees execute locally.
+
 ## Mission
 
 Use the P0 kernel to design, challenge, repair, and deploy ServerForge into one real Discord server explicitly authorized by its owner.
@@ -27,4 +38,4 @@ The case study must capture:
 - Named execution host: EDEN/Cali or another approved environment
 - Approval of the topology candidate selected for live application
 
-The repository issue `#1` is the operational P1 tracker.
+The recursive closeout requires the new committed proof bundle, promoted Git branch, draft PR, release manifest, and returned Discord message IDs.

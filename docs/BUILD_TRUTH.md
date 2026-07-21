@@ -4,9 +4,9 @@
 
 - **System:** PROMETHEUS V-1.1.1
 - **Category:** candidate-to-proof recursive software engineering runtime
-- **Current phase:** P0 ignition
-- **Implementation status:** local executable kernel
-- **Bridge baseline:** ServerForge wired from startup; live apply awaits authorized Discord credentials
+- **Current phase:** P1 live bridge verified; recursive forge implementation ready for authenticated execution
+- **Implementation status:** deterministic kernel, live ServerForge, and Codex-backed recursive campaign runtime
+- **Bridge baseline:** HYDRA ServerForge live verification completed under campaign `HYDRA-SERVERFORGE-20260719T023826Z`
 
 ## P0 claim
 
@@ -30,13 +30,13 @@ P0 is complete only when all of the following are observed in a clean environmen
 
 ## Explicit non-claims
 
-P0 does not claim autonomous model reasoning, arbitrary code synthesis, production sandboxing, multi-agent concurrency, EDEN/Cali connectivity, Thoth persistence, or ProofGrid network publication. ServerForge planning and live API mutation are implemented, but no live Discord deployment is claimed until an authorized guild passes preflight, apply, and verify with retained evidence.
+P0 itself remains deterministic and does not claim model reasoning. The separate recursive lane now implements parallel Codex generation, independent Codex challenge/repair, exact-confirmation Git promotion, draft-PR publication, and simultaneous ServerForge telemetry. These recursive capabilities are implemented and test-covered, but are not labeled live until the authenticated local campaign emits and verifies its recursive receipt. Git worktrees are not an OS sandbox. EDEN/Cali isolation, Thoth persistence, asymmetric signing, and external timestamp authority remain later gates.
 
 ## Promotion sequence
 
 - **P0A — Ignition:** deterministic local mission-to-proof kernel
 - **P0B — Direct bridge:** ServerForge topology, preflight, snapshot, apply, and verify available from startup
-- **P1 — External proof:** execute the bridge against the new authorized Discord server and capture the case study
-- **P2 — Recursive build:** PROMETHEUS applies the loop to its own repository
+- **P1 — External proof:** completed live HYDRA ServerForge deployment and recovery receipt
+- **P2 — Recursive build:** implementation complete; authenticated Codex/GitHub execution pending
 - **P3 — Estate bridges:** EDEN/Cali execution, Thoth memory, ProofGrid evidence, ServerForge Observatory
 - **P4 — Product hardening:** installation, threat model, observability, recovery, release artifacts, competition demo

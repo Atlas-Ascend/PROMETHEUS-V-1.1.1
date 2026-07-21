@@ -33,4 +33,22 @@ PROMETHEUS turns a software mission into one promoted, evidence-backed result wh
 
 ## P1 requirements
 
-P1 will execute the existing ServerForge bridge against one explicitly authorized new server. It must inventory the before state, evaluate topology candidates, validate permissions, apply one promoted topology, prove a real end-to-end command path, and retain a secrets-redacted recovery package.
+P1 has executed the existing ServerForge bridge against an explicitly authorized server. It inventories the before state, validates permissions, applies and verifies the topology, publishes proof messages, and retains a secrets-redacted recovery package.
+
+## Recursive forge requirements
+
+- Use the actual PROMETHEUS repository as the source worktree.
+- Require a clean captured base commit.
+- Create at least three independent candidate branches and worktrees.
+- Run Codex candidates concurrently with explicit workspace-write scope.
+- Remove Discord and GitHub credentials from Codex child environments.
+- Retain JSONL and final-message evidence for every Codex execution.
+- Reject candidates that produce no patch, exceed change limits, or fail standard tests.
+- Select exactly one standard-gate survivor deterministically.
+- Run an independent Codex challenge against the leader and commit proven repairs.
+- Re-run standard and adversarial commands after repair.
+- Commit a portable proof bundle with the promoted source.
+- Require exact repository confirmation before push.
+- Open a draft PR only after the promoted branch exists remotely.
+- Publish bounded mission, candidate, challenge, repair, and promotion events into ServerForge while execution proceeds.
+- Build an installable wheel and SHA-256 release manifest.

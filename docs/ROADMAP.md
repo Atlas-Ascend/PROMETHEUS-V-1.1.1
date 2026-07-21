@@ -9,12 +9,15 @@
 | Receipt and capability genome | Active | receipt verification passes |
 | Hash-chained event ledger | Active | chain verification passes |
 | ServerForge offline planning | Active | empty-server plan lists full topology |
-| ServerForge live bridge | Implemented, live proof pending | authorized guild preflight/apply/verify |
+| ServerForge live bridge | Active and verified | campaign receipt `26ccd3be...65ffc` |
 | GitHub CI proof bundle | Defined, remote run pending | workflow artifact available |
-| Model-backed candidate generation | Planned | three generated patches reproduce |
+| Model-backed candidate generation | Implemented; live run pending | three Codex patches and transcript hashes reproduce |
 | OS-level execution sandbox | Planned | escape and resource tests pass |
 | EDEN/Cali worker adapter | Planned | remote mission receipt returns |
 | Thoth memory adapter | Planned | retrieval cites exact proof lineage |
 | ProofGrid signing | Planned | signature and external timestamp verify |
 | ServerForge Gateway observatory | Planned | live mission telemetry visible |
-| PROMETHEUS self-build | Planned | kernel improves itself through same gates |
+| PROMETHEUS self-build | Implemented; authenticated run pending | recursive receipt and promoted draft PR verify |
+| Windows installer and launcher | Implemented | venv install and full unit suite pass |
+| Release wheel and SHA manifest | Implemented; build pending | wheel installs and manifest hashes match |
+| Simultaneous ServerForge telemetry | Implemented; recursive live run pending | lifecycle messages return channel/message IDs |

@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prometheus.local/schemas/recursive-mission.schema.json",
+  "title": "PROMETHEUS Recursive Mission",
+  "type": "object",
+  "required": [
+    "schema",
+    "mission_id",
+    "objective",
+    "source_repo",
+    "standard_test",
+    "challenge_test",
+    "candidates",
+    "promotion"
+  ],
+  "properties": {
+    "schema": {"const": "prometheus.recursive-mission.v1"},
+    "mission_id": {"type": "string", "minLength": 1},
+    "objective": {"type": "string", "minLength": 1},
+    "source_repo": {"type": "string", "minLength": 1},
+    "base_ref": {"type": "string", "minLength": 1},
+    "acceptance_criteria": {"type": "array", "items": {"type": "string"}},
+    "constraints": {"type": "array", "items": {"type": "string"}},
+    "standard_test": {"$ref": "#/$defs/command"},
+    "challenge_test": {"$ref": "#/$defs/command"},
+    "policy": {
+      "type": "object",
+      "properties": {
+        "allowed_executables": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+        "command_timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 3600},
+        "max_output_chars": {"type": "integer", "minimum": 1000},
+        "max_changed_files": {"type": "integer", "minimum": 1},
+        "parallel_candidates": {"type": "integer", "minimum": 1, "maximum": 16}
+      },
+      "additionalProperties": false
+    },
+    "codex": {
+      "type": "object",
+      "properties": {
+        "model": {"type": "string", "minLength": 1},
+        "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 14400}
+      },
+      "additionalProperties": false
+    },
+    "candidates": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "strategy", "prompt"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "strategy": {"type": "string", "minLength": 1},
+          "prompt": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "promotion": {
+      "type": "object",
+      "required": ["repository", "base_branch", "branch_prefix", "pr_title"],
+      "properties": {
+        "repository": {"type": "string", "pattern": "^[^/]+/[^/]+$"},
+        "base_branch": {"type": "string", "minLength": 1},
+        "branch_prefix": {"type": "string", "minLength": 1},
+        "pr_title": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "command": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string"}
+    }
+  }
+}

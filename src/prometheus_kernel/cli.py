@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .engine import execute_mission, verify_receipt
+from .case_study import CaseStudyPublisher
+from .recursive import run_recursive_campaign, verify_recursive_receipt
 from .serverforge import (
     ServerForgeError,
     apply_topology,
@@ -29,6 +31,16 @@ def parser() -> argparse.ArgumentParser:
     run.add_argument("--output-root", type=Path)
     verify = commands.add_parser("verify", help="verify a promotion receipt")
     verify.add_argument("receipt", type=Path)
+    recursive = commands.add_parser("recursive", help="run the Codex-backed recursive forge")
+    recursive.add_argument("mission", type=Path, nargs="?", default=Path("missions/self-build.json"))
+    recursive.add_argument("--output-root", type=Path)
+    recursive.add_argument("--confirm-repo")
+    recursive.add_argument("--push", action="store_true")
+    recursive.add_argument("--open-pr", action="store_true")
+    recursive.add_argument("--publish-serverforge", action="store_true")
+    recursive_verify = commands.add_parser("verify-recursive", help="verify a recursive promotion receipt")
+    recursive_verify.add_argument("receipt", type=Path)
+    recursive_verify.add_argument("--workspace", type=Path)
     forge = commands.add_parser("serverforge", help="bridge PROMETHEUS to an authorized Discord server")
     forge_commands = forge.add_subparsers(dest="serverforge_command", required=True)
     install = forge_commands.add_parser("install-url", help="create the pinned Discord bot installation URL")
@@ -64,6 +76,29 @@ def main(argv: list[str] | None = None) -> int:
         valid = verify_receipt(args.receipt)
         print(json.dumps({"receipt": str(args.receipt), "valid": valid}, indent=2))
         return 0 if valid else 1
+    if args.command == "verify-recursive":
+        valid = verify_recursive_receipt(args.receipt, args.workspace)
+        print(json.dumps({"receipt": str(args.receipt), "valid": valid}, indent=2))
+        return 0 if valid else 1
+    if args.command == "recursive":
+        try:
+            publisher = None
+            if args.publish_serverforge:
+                client, guild_id = client_from_environment()
+                publisher = CaseStudyPublisher(client, guild_id)
+            result = run_recursive_campaign(
+                args.mission,
+                output_root=args.output_root,
+                publisher=publisher,
+                confirm_repo=args.confirm_repo,
+                push=args.push,
+                open_pr=args.open_pr,
+            )
+            print(json.dumps(result, indent=2, sort_keys=True))
+            return 0
+        except Exception as error:
+            print(json.dumps({"status": "BLOCKED", "error": str(error)}, indent=2))
+            return 2
     try:
         if args.serverforge_command == "install-url":
             if not args.application_id:
