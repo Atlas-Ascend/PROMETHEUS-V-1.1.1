@@ -1,0 +1,25 @@
+﻿{
+    "campaign":  "PROMETHEUS canonical artifact import",
+    "timestamp":  "2026-07-20T17:06:43.2505348-07:00",
+    "local_repository":  "C:\\Ghost\\PROMETHEUS-V-1.1.1",
+    "local_branch":  "prometheus/hermes-hydra-integrated-20260720-170412",
+    "local_checkpoint":  "93d360b1db1480cbeff57207c0f2d0b95bb96324",
+    "backup_branch":  "backup/pre-canonical-import-20260720-170640",
+    "canonical_remote":  "https://github.com/Atlas-Ascend/PROMETHEUS-AIS-V-1.1.1.git",
+    "canonical_branch":  "prometheus/hermes-agent-zero-command-to-proof",
+    "canonical_commit":  "a397624a0a2ace29fd2731bb11f64b02b5a11261",
+    "strategy":  "path-selective import without ancestry merge",
+    "reason":  "repositories have unrelated Git histories",
+    "imported_artifacts":  [
+                               {
+                                   "path":  "build_truth/03_HERMES_AGENT_ZERO_HYDRA_CONVERGENCE.md",
+                                   "sha256":  "5195af859e0a0d6ea32a96b3f3cd4d25343602ebe13a34acad2db00ac8ec9d61",
+                                   "bytes":  4867
+                               },
+                               {
+                                   "path":  "scripts/Invoke-PrometheusHermesHydraConvergence.ps1",
+                                   "sha256":  "98d0b4378ad4883932f2318c6cdc293477b7d54d48047a182dd0a45757271aaa",
+                                   "bytes":  24882
+                               }
+                           ]
+}
