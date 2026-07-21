@@ -1,0 +1,31 @@
+{
+  "schema": "prometheus.serverforge.case-study-target.v1",
+  "guild_id": "1528216351636984036",
+  "application_id": "1528218267540263065",
+  "public_key": "72810a56ad400a69f597ec0b62bf816324421351cc612fc1b822c58a323bed75",
+  "expected_guild_name": "PROMETHEUS Forge — Live Case Study",
+  "application_name": "Promethius Server Forge",
+  "purpose": "Authenticated ServerForge observability and evidence publication for the PROMETHEUS competition case study.",
+  "baseline_publication": "serverforge/publications/GAI-FR-20260721-PROM-SF-001.json",
+  "topology": "serverforge/topology.json",
+  "required_public_channels": [
+    "welcome-to-the-forge",
+    "live-case-study",
+    "proof-index",
+    "promotion-receipts",
+    "capability-genomes",
+    "reproduction-lab"
+  ],
+  "required_private_channels": [
+    "mission-intake",
+    "candidate-forge",
+    "promotion-gate",
+    "challenge-queue",
+    "findings",
+    "repair-verification",
+    "bridge-control",
+    "telemetry",
+    "incidents-and-rollback"
+  ],
+  "secret_policy": "DISCORD_BOT_TOKEN remains local and must never be committed, logged, embedded in receipts, screenshots, or case-study payloads."
+}
